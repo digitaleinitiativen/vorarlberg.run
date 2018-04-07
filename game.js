@@ -51,6 +51,7 @@ var preloadState = {
         this.load.image("finish-bludenz", BASE_PATH + "assets/fin2.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-bregenz", BASE_PATH + "assets/ship.png?" + ASSET_VERSION, 407, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
+        this.load.image("traphole", BASE_PATH + "assets/traphole.png?" + ASSET_VERSION, 24, 24);
         this.load.image("car", BASE_PATH + "assets/car.png?" + ASSET_VERSION, 64, 24);
         this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);
         this.load.image("spezial", BASE_PATH + "assets/spezial.png?" + ASSET_VERSION, 66, 100);
@@ -93,6 +94,7 @@ var gameState = {
         this.floor.body.immovable = true;
 
         this.finishLines = this.add.group();
+        this.trapholes = this.add.group();
         this.platforms = this.add.group();
         this.decorations = this.add.group();
         this.enemies = this.add.group();
@@ -226,6 +228,7 @@ var gameState = {
             this.jetpack.body.y = this.player.body.y + 32;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
+            this.game.physics.arcade.overlap(this.player, this.trapholes, this.fallDown, null, this);
             if(!this.player.body.touching.down) {
                 if (this.player.hasJetpack) {
                     this.jetpack.animations.play("fly");
@@ -271,6 +274,7 @@ var gameState = {
         this.platforms.removeAll();
         this.decorations.removeAll();
         this.powerUps.removeAll();
+        this.trapholes.removeAll();
         this.powerUpNotifications.removeAll();
         this.obstacles.removeAll();
         this.finishLines.removeAll();
@@ -306,6 +310,9 @@ var gameState = {
                 break;
             case "decoration":
                 this.spawnDecoration(item.conf);
+                break;
+            case "traphole":
+                this.spawnTraphole(item.conf);
                 break;
         }
 
@@ -354,6 +361,18 @@ var gameState = {
         this.game.physics.enable(obstacle);
         obstacle.body.velocity.x = conf.speed;
         obstacle.body.immovable = true;
+    },
+    spawnTraphole: function() {
+        var traphole = this.trapholes.create(
+            this.game.width,
+            this.floor.body.top,
+            "traphole"
+        );
+
+        this.game.physics.enable(traphole);
+        traphole.body.velocity.x = -BASE_SPEED;
+        traphole.body.immovable = true;
+        traphole.body.setSize(24, 25, 0, -1);
     },
     spawnLongObstacle: function(conf) {
         if(!conf) conf = {};
@@ -512,6 +531,10 @@ var gameState = {
             this.extraLifeNotifications.pop().kill();
         }
     },
+    fallDown: function(player, traphole) {
+        this.setGameOver(player, traphole);
+        this.player.body = null;
+    },
     setGameOver: function(player, enemy) {
         this.gameWon = false;
         this.endGame();
@@ -554,6 +577,9 @@ var gameState = {
         });
         this.powerUps.forEachAlive(function(powerUp) {
             powerUp.body.velocity.x = 0;
+        });
+        this.trapholes.forEachAlive(function(traphole) {
+            traphole.body.velocity.x = 0;
         });
     }    
 };

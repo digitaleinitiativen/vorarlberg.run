@@ -2,7 +2,6 @@ var level_uebersaxen = {
 	title: 'UEbersaxen',
 	welcome: "Hoi, in Uebersaxen",
 	spawns: [
-		
 		{
 			type: 'decoration',
 			time: 500,

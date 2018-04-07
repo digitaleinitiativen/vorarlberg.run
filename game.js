@@ -1,9 +1,6 @@
 var SPEED = 180;
 var GRAVITY = 1200;
 var JUMP = 580;
-var SPAWN_RATE = 3000;
-var SPAWN_REDUX = 50;
-var SPAWN_RAND = 400;
 var ASSET_VERSION = 1; //(new Date()).getTime();
 var BASE_PATH = '';
 var YAY_WORDS = [
@@ -88,8 +85,10 @@ var state = {
                 this.levelselect
             );
             level.inputEnabled = true;
+            var c = this.levels[i];
             level.events.onInputDown.add(function() {
-                this.start(this.levels[i]);
+                console.log(c);
+                this.start(c);
             }, this);
         }
 
@@ -109,7 +108,6 @@ var state = {
 
 
         this.upFree = true;
-        this.spawnRate = SPAWN_RATE;
 
         this.reset();
     },
@@ -171,18 +169,15 @@ var state = {
 
     },
     start: function(level) {
-        this.currentLevel = level;
-
         this.reset();
 
-        this.spawnTimer = this.game.time.create(this);
-        this.spawnTimer.add(this.spawnRate, this.spawnEnemy, this);
-        this.spawnTimer.start();
-        this.spawnRate = SPAWN_RATE;
+        this.currentLevel = level;
+        this.levelselect.visible = false;
+
+        this.currentSpawnItem = 0;
+        this.setSpawnTimer();
 
         this.scoreText.setText("SCORE: "+this.score);
-
-        this.levelselect.visible = false;
 
         this.gameStarted = true;
         this.gameOver = false;
@@ -196,8 +191,28 @@ var state = {
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.enemies.removeAll();
     },
-    spawnEnemy: function() {
+    setSpawnTimer: function() {
+        if(this.currentSpawnItem >= this.currentLevel.spawns.length) return;
+        this.spawnTimer = this.game.time.create(this);
+        this.spawnTimer.add(this.currentLevel.spawns[this.currentSpawnItem].time, this.spawn, this);
+        this.spawnTimer.start();
+    },
+    spawn: function() {
         this.spawnTimer.stop();
+
+        var item = this.currentLevel.spawns[this.currentSpawnItem];
+        switch(item.type) {
+            case "enemy":
+                this.spawnEnemy(item.conf);
+            break;
+        }
+
+        this.currentSpawnItem++;
+        this.setSpawnTimer();
+    },
+    spawnEnemy: function(conf) {
+        if(!conf.speed) conf.speed = -SPEED;
+        if(!conf.gravity) conf.gravity = GRAVITY;
 
         var enemy = this.enemies.create(
             this.game.width,
@@ -205,8 +220,8 @@ var state = {
             'enemy.kid'
         );
         this.game.physics.enable(enemy);
-        enemy.body.velocity.x = -SPEED;
-        enemy.body.gravity.y = GRAVITY;
+        enemy.body.velocity.x = conf.speed;
+        enemy.body.gravity.y = conf.gravity;
         enemy.body.setSize(24, 36, 12, 0);
 
         enemy.animations.add('run', [9, 8, 7, 6, 5, 4, 3, 2], 12, true);
@@ -214,12 +229,6 @@ var state = {
         enemy.animations.add('broken', [0], 1, false);
 
         enemy.animations.play('run');
-
-
-        this.spawnTimer = this.game.time.create(this);
-        this.spawnTimer.add(this.spawnRate + SPAWN_RAND * Math.random(), this.spawnEnemy, this);
-        this.spawnRate -= SPAWN_REDUX;
-        this.spawnTimer.start();
     },
     spawnPresent: function() {
         if(this.presents.countLiving() > 0) return;

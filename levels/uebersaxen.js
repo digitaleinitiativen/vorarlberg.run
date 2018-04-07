@@ -3,6 +3,10 @@ var level_uebersaxen = {
 	welcome: "Hoi, in Uebersaxen",
 	spawns: [
 		{
+			type: 'traphole',
+			time: 0
+		},
+		{
 			type: 'decoration',
 			time: 500,
 			conf: {

@@ -533,7 +533,8 @@ var gameState = {
     },
     fallDown: function(player, traphole) {
         this.setGameOver(player, traphole);
-        this.player.body = null;
+        this.player.body.velocity.x = BASE_SPEED;
+        this.player.body.y += 10;
     },
     setGameOver: function(player, enemy) {
         this.gameWon = false;

@@ -41,6 +41,10 @@ var preloadState = {
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
         this.load.image("feather", BASE_PATH + "assets/jetpack.png?" + ASSET_VERSION, 24, 24);
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
+        this.load.image("cow", BASE_PATH + "assets/cow.png?" + ASSET_VERSION, 64, 51);
+        this.load.image("flower0", BASE_PATH + "assets/flower0.png?" + ASSET_VERSION, 26, 32);
+        this.load.image("flower1", BASE_PATH + "assets/flower1.png?" + ASSET_VERSION, 26, 32);
+        this.load.image("flower2", BASE_PATH + "assets/flower2.png?" + ASSET_VERSION, 26, 32);
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
@@ -84,6 +88,7 @@ var gameState = {
 
         this.finishLines = this.add.group();
         this.platforms = this.add.group();
+        this.decorations = this.add.group();
         this.enemies = this.add.group();
         this.obstacles = this.add.group();
         this.powerUps = this.add.group();
@@ -245,6 +250,7 @@ var gameState = {
         this.extraLifeNotifications = [];
         this.enemies.removeAll();
         this.platforms.removeAll();
+        this.decorations.removeAll();
         this.powerUps.removeAll();
         this.powerUpNotifications.removeAll();
         this.obstacles.removeAll();
@@ -275,7 +281,10 @@ var gameState = {
                 break;
             case "obstacle":
                 this.spawnObstacle(item.conf);
-            break;
+                break;
+            case "decoration":
+                this.spawnDecoration(item.conf);
+                break;
         }
 
         this.currentSpawnItem++;
@@ -322,6 +331,18 @@ var gameState = {
         this.game.physics.enable(obstacle);
         obstacle.body.velocity.x = conf.speed;
         obstacle.body.immovable = true;
+    },
+    spawnDecoration: function(conf) {        
+        var decoration = this.decorations.create(
+            this.game.width,
+            this.floor.body.top - 32,
+            conf.image
+        );
+        decoration.alpha = 0.5;
+
+        this.game.physics.enable(decoration);
+        decoration.body.velocity.x = -BASE_SPEED;
+        decoration.body.immovable = true;
     },
     spawnPlatform: function(conf) {
         if(!conf) conf = {};
@@ -480,6 +501,9 @@ var gameState = {
         });
         this.finishLines.forEachAlive(function(finishLine) {
             finishLine.body.velocity.x = 0;
+        });
+        this.decorations.forEachAlive(function(decoration) {
+            decoration.body.velocity.x = 0;
         });
         this.obstacles.forEachAlive(function(obstacle) {
             obstacle.body.velocity.x = 0;

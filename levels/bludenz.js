@@ -8,8 +8,15 @@ var level_bludenz = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 200,
+			conf: {
+				image: 'flower0'
+			}
+		},
+		{
 			type: "platform",
-			time: 400
+			time: 200
 		},
 		{
 			type: 'enemy',
@@ -49,8 +56,15 @@ var level_bludenz = {
 			time: 500
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower1'
+			}
+		},
+		{
 			type: 'platform',
-			time: 1000
+			time: 500
 		},
 		{
 			type: "platform",
@@ -71,8 +85,15 @@ var level_bludenz = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower2'
+			}
+		},
+		{
 			type: 'platform',
-			time: 1500
+			time: 1000
 		},
 		{
 			type: 'enemy',
@@ -147,8 +168,15 @@ var level_bludenz = {
 			time: 1000
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower1'
+			}
+		},
+		{
 			type: "platform",
-			time: 1500
+			time: 1000
 		},
 		{
 			type: 'enemy',
@@ -170,16 +198,30 @@ var level_bludenz = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 1000,
+			conf: {
+				image: 'flower0'
+			}
+		},
+		{
 			type: 'platform',
-			time: 1500
+			time: 500
+		},
+		{
+			type: 'decoration',
+			time: 250,
+			conf: {
+				image: 'flower2'
+			}
 		},
 		{
 			type: 'obstacle',
-			time: 500,
+			time: 750,
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.5
 			}

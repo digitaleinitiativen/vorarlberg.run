@@ -56,6 +56,7 @@ var preloadState = {
         this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
         this.load.image('water', BASE_PATH + 'assets/water.png?' + ASSET_VERSION, 64, 41);
         this.load.image('fish', BASE_PATH + 'assets/fish.png?' + ASSET_VERSION, 24, 32);
+        this.load.image('gameover', BASE_PATH + 'assets/gameover.png?' + ASSET_VERSION, 680, 320);
     },
     create: function() {
         this.state.start('splash');
@@ -66,6 +67,15 @@ var splashState = {
         var splash = this.add.sprite(0, 0, 'splash');
         splash.inputEnabled = true;
         splash.events.onInputDown.add(function() {
+            this.state.start('game');
+        }, this);
+    }
+}
+var gameoverState = {
+    create: function() {
+        var gameover = this.add.sprite(0, 0, 'gameover');
+        gameover.inputEnabled = true;
+        gameover.events.onInputDown.add(function() {
             this.state.start('game');
         }, this);
     }
@@ -224,7 +234,8 @@ var gameState = {
             this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
             this.floorstacles.forEachAlive(function(floorstacle) {
-                floorstacle.tilePosition.x += this.time.physicsElapsed * 150;
+                if(floorstacle.tilePosition)
+                    floorstacle.tilePosition.x += this.time.physicsElapsed * 150;
             }, this);
             this.player.body.x = this.world.width / 4;
             this.jetpack.body.x = (this.world.width / 4) - 14;
@@ -370,6 +381,7 @@ var gameState = {
             this.game.width + floorstacle.body.width / 2,
             this.floor.body.top + 30,
             'fish',
+            0,
             this.floorstacles
         );
         this.game.physics.enable(fish);
@@ -568,12 +580,19 @@ var gameState = {
 
         this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
         this.player.animations.play('broken');
+        var timer = this.game.time.create(this);
+        timer.add(2000, function() {
+            this.state.start('gameover');
+        }, this);
+        timer.start();
+
     },
     setWin: function(player, finishLine) {
         this.gameWon = true;
         this.endGame();
         this.showHint(finishLine, 'YOU ARE A WINNER!');
         this.player.animations.play('win');
+        this.levelselect.visible = true;
     },
     endGame: function() {
         this.timeOver = this.game.time.now;
@@ -581,7 +600,6 @@ var gameState = {
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
         this.cityText.setText("");
-        this.levelselect.visible = true;
 
         this.player.body.velocity.x = 0;
         this.enemies.forEachAlive(function(enemy) {
@@ -619,4 +637,5 @@ var game = new Phaser.Game(
 game.state.add('preload', preloadState);
 game.state.add('game', gameState);
 game.state.add('splash', splashState);
+game.state.add('gameover', gameoverState);
 game.state.start('preload');

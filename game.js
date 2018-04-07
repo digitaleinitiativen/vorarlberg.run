@@ -64,6 +64,7 @@ var gameState = {
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_feldkirch);
+        this.levels.push(level_bludenz);
         this.levels.push(level_dev);
 
         this.currentLevel = null;
@@ -292,6 +293,14 @@ var gameState = {
         enemy.body.velocity.x = conf.speed;
         enemy.body.gravity.y = conf.gravity;
         enemy.body.setSize(36, 50, 30, 30);
+
+        if (conf.jumps) {
+            var jumpTimer = this.game.time.create(this);
+            jumpTimer.add(1000 + (1000 * Math.random()), function() {
+                enemy.body.velocity.y -= JUMP;
+            });
+            jumpTimer.start();
+        }
 
         enemy.animations.add('run', [0, 1], 8, true);
         enemy.animations.add('broken', [2], 1, false);

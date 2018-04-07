@@ -48,6 +48,8 @@ var preloadState = {
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
+        this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);
+        this.load.image("spezial", BASE_PATH + "assets/spezial.png?" + ASSET_VERSION, 66, 100);
         this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
     },
     create: function() {
@@ -334,11 +336,12 @@ var gameState = {
     spawnObstacle: function(conf) {
         if(!conf) conf = {};
         if(!conf.speed) conf.speed = -BASE_SPEED;
+        if(!conf.image) conf.image = 'obstacle';
         
         var obstacle = this.obstacles.create(
             this.game.width,
             this.floor.body.top - 50,
-            'obstacle'
+            conf.image
         );
 
         this.game.physics.enable(obstacle);

@@ -98,7 +98,10 @@ var level_dornbirn = {
 		},
 		{
 			type: 'obstacle',
-			time: 600
+			time: 600,
+			conf: {
+				image: "spezial"
+			}
 		},
 		{
 			type: 'enemy',
@@ -173,6 +176,9 @@ var level_dornbirn = {
 		{
 			type: 'obstacle',
 			time: 600,
+			conf: {
+				image: "pfiff"
+			}
 		},
 		{
 			type: 'enemy',

@@ -49,6 +49,7 @@ var preloadState = {
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-bludenz", BASE_PATH + "assets/fin2.png?" + ASSET_VERSION, 179, 160);
+        this.load.image("finish-bregenz", BASE_PATH + "assets/ship.png?" + ASSET_VERSION, 407, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
         this.load.image("car", BASE_PATH + "assets/car.png?" + ASSET_VERSION, 64, 24);
         this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);

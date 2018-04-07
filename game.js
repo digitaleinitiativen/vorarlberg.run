@@ -245,7 +245,7 @@ var gameState = {
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.player, this.trapholes, this.fallDown, null, this);
-            this.game.physics.arcade.overlap(this.player, this.floorstacles, this.setGameOver, null, this);
+            this.game.physics.arcade.overlap(this.player, this.floorstacles, this.fallDown, null, this);
             if(!this.player.body.touching.down) {
                 if (this.player.hasJetpack) {
                     this.jetpack.animations.play("fly");
@@ -400,8 +400,8 @@ var gameState = {
         var jumpTimer = this.game.time.create(this);
         jumpTimer.add(3900, function() {
             fish.body.gravity.y = GRAVITY * 0.9;
-            fish.body.velocity.y -= JUMP * 1;
-            jumpTimer.add(500, function() {
+            fish.body.velocity.y -= JUMP * 0.8;
+            jumpTimer.add(400, function() {
                 fish.rotation = Math.PI;
             });
         });

@@ -11,13 +11,13 @@ var level_bregenz = {
 		},
 		{
 			type: 'floorstacle',
-			time: 0,
+			time: 500,
 			conf: {
 			}
 		},
 		{
 			type: 'enemy',
-			time: 800,
+			time: 300,
 			conf: {
 				height: 60
 			}
@@ -132,7 +132,7 @@ var level_bregenz = {
 
 		{
 			type: 'finish',
-			time: 1000,
+			time: 3000,
 			conf: {
 				image: "finish-bregenz"
 			}

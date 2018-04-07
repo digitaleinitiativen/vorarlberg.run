@@ -323,7 +323,7 @@ var state = {
             case "feather":
                 this.reduceGravity(0.7, 2500, removeCallback);
                 break;
-            case "shield":
+            case "extraLife":
                 this.extraLifeNotifications.push(notification);
                 this.addLife();
                 break;
@@ -353,7 +353,7 @@ var state = {
         }, this);
         timer.start();
     },
-    addLive: function() {
+    addLife: function() {
         this.player.lifes++;
     },
     addScore: function(addWhat) {
@@ -384,6 +384,7 @@ var state = {
         if (player.lifes <= 0) {
             this.setGameOver(player, enemy);
         } else {
+            enemy.kill();
             this.extraLifeNotifications.pop().kill();
         }
     },

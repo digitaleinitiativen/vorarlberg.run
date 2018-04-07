@@ -68,6 +68,7 @@ var state = {
         this.player.animations.add('run', [0, 1, 2, 3, 4, 5], 12, true);
         this.player.animations.add('stand', [6], 1, false);
         this.player.animations.add('jump', [7], 1, false);
+        this.player.animations.add('fly', [7], 1, false);
         this.player.animations.add('win', [8], 1, false);
         this.player.animations.add('broken', [9], 1, false);
 
@@ -172,8 +173,13 @@ var state = {
             this.player.body.x = this.world.width / 4;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
-            if(!this.player.body.touching.down)
-                this.player.animations.play('jump');
+            if(!this.player.body.touching.down) {
+                if (this.player.hasJetpack) {
+                    this.player.animations.play('fly');
+                } else {
+                    this.player.animations.play('jump');
+                }
+            }
             else
                 this.player.animations.play('run');
         } else this.player.animations.play('broken');
@@ -201,6 +207,7 @@ var state = {
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.player.lifes = 1;
+        this.player.hasJetpack = false;
         this.extraLifeNotifications = [];
         this.enemies.removeAll();
         this.platforms.removeAll();
@@ -320,7 +327,11 @@ var state = {
                 this.reduceGameSpeed(0.5, 2500, removeCallback);
                 break;
             case "feather":
-                this.reduceGravity(0.7, 2500, removeCallback);
+                this.player.hasJetpack = true;
+                this.reduceGravity(0.7, 2500, function() {
+                    removeCallback();
+                    this.player.hasJetpack = false;
+                });
                 break;
             case "extraLife":
                 this.extraLifeNotifications.push(notification);

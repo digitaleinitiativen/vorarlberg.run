@@ -35,10 +35,12 @@ var state = {
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
         this.load.image("chimney", BASE_PATH + "assets/chimney.png?" + ASSET_VERSION, 24, 96);
+        this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
     },
     create: function() {
         this.levels = [];
         this.levels.push(level_dornbirn);
+        this.levels.push(level_dev);
 
         this.currentLevel = null;
 
@@ -57,6 +59,7 @@ var state = {
         this.platforms = this.add.group();
         this.presents = this.add.group();
         this.finishLines = this.add.group();
+        this.obstacles = this.add.group();
 
         this.player = this.add.sprite(0, 0, 'player');
         this.player.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
@@ -90,7 +93,6 @@ var state = {
             level.inputEnabled = true;
             var c = this.levels[i];
             level.events.onInputDown.add(function() {
-                console.log(c);
                 this.start(c);
             }, this);
         }
@@ -167,6 +169,7 @@ var state = {
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.player.body.x = this.world.width / 4;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
+            this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
             if(!this.player.body.touching.down)
                 this.player.animations.play('jump');
             else
@@ -196,6 +199,9 @@ var state = {
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.enemies.removeAll();
+        this.obstacles.removeAll();
+        this.finishLines.removeAll();
+        this.platforms.removeAll();
     },
     setSpawnTimer: function() {
         if(this.currentSpawnItem >= this.currentLevel.spawns.length) return;
@@ -217,6 +223,9 @@ var state = {
             break;
             case "finish":
                 this.spawnFinish(item.conf);
+            break;
+            case "obstacle":
+                this.spawnObstacle(item.conf);
             break;
         }
 
@@ -242,6 +251,20 @@ var state = {
         enemy.animations.add('broken', [0], 1, false);
 
         enemy.animations.play('run');
+    },
+    spawnObstacle: function(conf) {
+        if(!conf) conf = {};
+        if(!conf.speed) conf.speed = -BASE_SPEED;
+        
+        var obstacle = this.obstacles.create(
+            this.game.width,
+            this.floor.body.top - 50,
+            'obstacle'
+        );
+
+        this.game.physics.enable(obstacle);
+        obstacle.body.velocity.x = conf.speed;
+        obstacle.body.immovable = true;
     },
     spawnPlatform: function(conf) {
         if(!item.speed) item.speed = -BASE_SPEED;
@@ -337,6 +360,9 @@ var state = {
         });
         this.finishLines.forEachAlive(function(finishLine) {
             finishLine.body.velocity.x = 0;
+        });
+        this.obstacles.forEachAlive(function(obstacle) {
+            obstacle.body.velocity.x = 0;
         });
     }    
 };

@@ -27,14 +27,13 @@ var level_dornbirn = {
 			}
 		},
 		{
-<<<<<<< HEAD
 			type: 'finish',
 			time: 0,
 			conf: {
 				
 			}
 		},
-=======
+		{
 			type: "platform",
 			time: 100
 		},
@@ -45,6 +44,5 @@ var level_dornbirn = {
 
 			}
 		}
->>>>>>> b9c21d0e7b96f13100b27897e0826445994497ae
 	]
 }

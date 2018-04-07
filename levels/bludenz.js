@@ -144,11 +144,11 @@ var level_bludenz = {
 		},
 		{
 			type: 'obstacle',
-			time: 1500
+			time: 1000
 		},
 		{
 			type: "platform",
-			time: 1000
+			time: 1500
 		},
 		{
 			type: 'enemy',

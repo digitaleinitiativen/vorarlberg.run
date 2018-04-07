@@ -282,7 +282,7 @@ var gameState = {
     spawnEnemy: function(conf) {
         if(!conf.speed) conf.speed = -ENEMY_SPEED;
         if(!conf.gravity) conf.gravity = GRAVITY;
-        if(!conf.image) conf.image = 'enemy-yellow';
+        if(!conf.image) conf.image = conf.jumps ? "enemy-red" : 'enemy-yellow';
 
         var enemy = this.enemies.create(
             this.game.width,
@@ -296,7 +296,7 @@ var gameState = {
 
         if (conf.jumps) {
             var jumpTimer = this.game.time.create(this);
-            jumpTimer.add(1000 + (1000 * Math.random()), function() {
+            jumpTimer.add(2200 / (conf.speed / -ENEMY_SPEED), function() {
                 enemy.body.velocity.y -= JUMP;
             });
             jumpTimer.start();

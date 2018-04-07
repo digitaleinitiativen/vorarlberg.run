@@ -25,7 +25,7 @@ var NEJ_WORDS = [
 var state = {
     preload: function() {
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
-        this.load.spritesheet("enemy.kid", BASE_PATH + "assets/tile-fan.png?" + ASSET_VERSION, 48, 48, 20);
+        this.load.spritesheet("enemy.kid", BASE_PATH + "assets/enemy.png?" + ASSET_VERSION, 96, 96, 3);
         this.load.image("background.0", BASE_PATH + "assets/back-0.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.1", BASE_PATH + "assets/back-1.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.2", BASE_PATH + "assets/back-2.png?" + ASSET_VERSION, 320, 320);
@@ -40,6 +40,9 @@ var state = {
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
     },
     create: function() {
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.scale.pageAlignHorizontally = true;
+        
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_dev);
@@ -246,16 +249,16 @@ var state = {
 
         var enemy = this.enemies.create(
             this.game.width,
-            this.floor.body.top - this.player.body.height,
+            this.floor.body.top - 96,
             'enemy.kid'
         );
         this.game.physics.enable(enemy);
         enemy.body.velocity.x = conf.speed;
         enemy.body.gravity.y = conf.gravity;
-        enemy.body.setSize(24, 48, 12, 0);
+        enemy.body.setSize(36, 50, 30, 30);
 
-        enemy.animations.add('run', [9, 8, 7, 6, 5, 4, 3, 2], 12, true);
-        enemy.animations.add('broken', [0], 1, false);
+        enemy.animations.add('run', [0, 1], 8, true);
+        enemy.animations.add('broken', [2], 1, false);
 
         enemy.animations.play('run');
     },

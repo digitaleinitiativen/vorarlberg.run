@@ -239,8 +239,8 @@ var state = {
 
         enemy.animations.play('run');
     },
-    spawnPlatform: function(conf) {
-        if(!conf.speed) conf.speed = -SPEED;
+    spawnPlatform: function(item) {
+        if(!item.speed) item.speed = -SPEED;
 
         var platform = this.platforms.create(
             this.game.width,
@@ -248,7 +248,7 @@ var state = {
             'platform'
         );
         this.game.physics.enable(platform);
-        platform.body.velocity.x = conf.speed / 1.5;
+        platform.body.velocity.x = item.speed / 1.5;
         platform.body.setSize(72, 1, 0, 0);
         platform.body.immovable = true;
     },

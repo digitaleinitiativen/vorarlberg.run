@@ -29,6 +29,17 @@ var level_dornbirn = {
 			conf: {
 
 			}
+		},
+		{
+			type: "platform",
+			time: 100
+		},
+		{
+			type: 'enemy',
+			time: 1000,
+			conf: {
+
+			}
 		}
 	]
 }

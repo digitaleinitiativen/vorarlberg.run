@@ -66,7 +66,7 @@ var gameState = {
         this.levels.push(level_dornbirn);
         this.levels.push(level_feldkirch);
         this.levels.push(level_bregenz);
-        this.levels.push(level_dev);
+        this.levels.push(level_uebersaxen);
 
         this.currentLevel = null;
 

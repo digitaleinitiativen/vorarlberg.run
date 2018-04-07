@@ -48,6 +48,7 @@ var preloadState = {
         this.load.image("flower3", BASE_PATH + "assets/flower3.png?" + ASSET_VERSION, 26, 32);
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
+        this.load.image("finish-bludenz", BASE_PATH + "assets/fin2.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
         this.load.image("car", BASE_PATH + "assets/car.png?" + ASSET_VERSION, 64, 24);
         this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);
@@ -405,6 +406,11 @@ var gameState = {
         );
 
         this.game.physics.enable(finishLine);
+
+        if (this.currentLevel.title == 'Bludenz') {
+            finishLine.body.setSize(100, 160, 40, 0)
+        }
+
         finishLine.body.velocity.x = -BASE_SPEED;
     },
     spawnPowerUp: function(conf) {

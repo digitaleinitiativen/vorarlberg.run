@@ -242,7 +242,7 @@ var level_bludenz = {
 			type: 'finish',
 			time: 1000,
 			conf: {
-				
+				image: 'finish-bludenz'
 			}
 		},
 

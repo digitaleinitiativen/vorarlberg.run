@@ -26,6 +26,7 @@ var state = {
     preload: function() {
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
         this.load.spritesheet("enemy.kid", BASE_PATH + "assets/enemy.png?" + ASSET_VERSION, 96, 96, 3);
+        this.load.spritesheet("jetpack-char", BASE_PATH + "assets/jetpack-char.png?" + ASSET_VERSION, 32, 32, 5);
         this.load.image("background.0", BASE_PATH + "assets/back-0.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.1", BASE_PATH + "assets/back-1.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.2", BASE_PATH + "assets/back-2.png?" + ASSET_VERSION, 320, 320);
@@ -34,7 +35,7 @@ var state = {
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
-        this.load.image("feather", BASE_PATH + "assets/feather.png?" + ASSET_VERSION, 24, 24);
+        this.load.image("feather", BASE_PATH + "assets/jetpack.png?" + ASSET_VERSION, 24, 24);
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
         this.load.image("finish", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
@@ -66,6 +67,13 @@ var state = {
         this.powerUpNotifications = this.add.group();
         this.finishLines = this.add.group();
         this.obstacles = this.add.group();
+
+        this.jetpack = this.add.sprite(0, 0, "jetpack-char");
+        this.jetpack.animations.add("fly", [1, 2], 6, true);
+        this.jetpack.animations.add("off", [0], 1, false);
+        this.jetpack.animations.play("off");
+
+        this.game.physics.enable(this.jetpack);
 
         this.player = this.add.sprite(0, 0, 'player');
         this.player.animations.add('run', [0, 1, 2, 3, 4, 5], 12, true);
@@ -166,12 +174,21 @@ var state = {
             this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
             this.player.body.x = this.world.width / 4;
+            this.jetpack.body.x = (this.world.width / 4) - 14;
+            this.jetpack.body.y = this.player.body.y + 32;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
-            if(!this.player.body.touching.down)
+            if(!this.player.body.touching.down) {
+                if (this.player.hasJetpack) {
+                    this.jetpack.animations.play("fly");
+                }
+
                 this.player.animations.play('jump');
-            else
+            }
+            else {
+                this.jetpack.animations.play("off");
                 this.player.animations.play('run');
+            }
         } else {
             console.log(this.gameWon);
             if(this.gameWon) this.player.animations.play('win');
@@ -198,6 +215,8 @@ var state = {
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.player.lifes = 1;
+        this.player.hasJetpack = false;
+        this.jetpack.visible = false;
         this.extraLifeNotifications = [];
         this.enemies.removeAll();
         this.platforms.removeAll();
@@ -317,7 +336,14 @@ var state = {
                 this.reduceGameSpeed(0.5, 2500, removeCallback);
                 break;
             case "feather":
-                this.reduceGravity(0.7, 2500, removeCallback);
+                this.player.hasJetpack = true;
+                this.jetpack.visible = true;
+                var that = this;
+                this.reduceGravity(0.7, 4000, function() {
+                    removeCallback();
+                    that.jetpack.visible = false;
+                    that.player.hasJetpack = false;
+                });
                 break;
             case "extraLife":
                 this.extraLifeNotifications.push(notification);

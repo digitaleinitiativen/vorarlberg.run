@@ -35,6 +35,7 @@ var state = {
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
         this.load.image("feather", BASE_PATH + "assets/feather.png?" + ASSET_VERSION, 24, 24);
+        this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
         this.load.image("chimney", BASE_PATH + "assets/chimney.png?" + ASSET_VERSION, 24, 96);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
     },
@@ -234,7 +235,6 @@ var state = {
             case "powerup":
                 this.spawnPowerUp(item.conf);
                 break;
-            break;
             case "obstacle":
                 this.spawnObstacle(item.conf);
             break;

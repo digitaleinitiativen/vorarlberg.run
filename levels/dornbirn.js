@@ -13,8 +13,15 @@ var level_dornbirn = {
 			time: 400
 		},
 		{
+			type: 'powerup',
+			time: 1500,
+			conf: {
+				powerUpType: "extraLife"
+			}
+		},
+		{
 			type: 'enemy',
-			time: 3500,
+			time: 2000,
 			conf: {
 
 			}

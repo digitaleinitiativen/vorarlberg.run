@@ -31,7 +31,6 @@ var state = {
         this.load.image("background.2", BASE_PATH + "assets/background-2.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("background.3", BASE_PATH + "assets/background-3.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("ground", BASE_PATH + "assets/tile-ground.png?" + ASSET_VERSION, 24, 24);
-        this.load.image("present", BASE_PATH + "assets/present.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
@@ -60,7 +59,6 @@ var state = {
 
         this.enemies = this.add.group();
         this.platforms = this.add.group();
-        this.presents = this.add.group();
         this.powerUps = this.add.group();
         this.finishLines = this.add.group();
         this.obstacles = this.add.group();
@@ -134,13 +132,6 @@ var state = {
                     enemy.kill();
                 }
             });
-            this.presents.forEachAlive(function(present) {
-                if(present.body.y > this.game.world.height) {
-                    obj.showHint(present, NEJ_WORDS[Math.floor(Math.random() * NEJ_WORDS.length)]);
-                    present.kill();
-                    obj.addScore(-1000);
-                }
-            });
             this.powerUps.forEachAlive(function(powerUp) {
                 if(powerUp.body.y > this.game.world.height) {
                     powerUp.kill();
@@ -161,8 +152,6 @@ var state = {
                 } else {
                     if(this.player.body.touching.down)
                         this.player.body.velocity.y -= JUMP;
-                    else
-                        this.spawnPresent();
                 }
             }
             this.upFree = false;
@@ -179,7 +168,6 @@ var state = {
             this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
             this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
-            this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
             this.player.body.x = this.world.width / 4;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
@@ -265,7 +253,6 @@ var state = {
         enemy.body.setSize(24, 36, 12, 0);
 
         enemy.animations.add('run', [9, 8, 7, 6, 5, 4, 3, 2], 12, true);
-        enemy.animations.add('run-present', [17, 16, 15, 14, 13, 12, 11, 10], 12, true);
         enemy.animations.add('broken', [0], 1, false);
 
         enemy.animations.play('run');
@@ -307,17 +294,6 @@ var state = {
         this.game.physics.enable(finishLine);
         finishLine.body.velocity.x = -BASE_SPEED;
     },
-    spawnPresent: function() {
-        if(this.presents.countLiving() > 0) return;
-        var present = this.presents.create(
-            this.player.body.x + this.player.body.width / 2 - 12,
-            this.player.body.bottom,
-            'present'
-        );
-        this.game.physics.enable(present);
-        present.body.velocity.x = -BASE_SPEED * 1.8;
-        present.body.gravity.y = GRAVITY;
-    },
     spawnPowerUp: function(conf) {
         var powerUp = this.powerUps.create(
             this.game.width,
@@ -328,14 +304,6 @@ var state = {
 
         this.game.physics.enable(powerUp);
         powerUp.body.velocity.x = -BASE_SPEED / 1.2;
-    },
-    catchPresent: function(enemy, present) {
-        enemy.body.velocity.x *= 1.1;
-        enemy.body.velocity.y -= 60;
-        enemy.animations.play('run-present');
-        present.kill();
-        this.addScore(5000);
-        this.showHint(enemy, YAY_WORDS[Math.floor(Math.random() * YAY_WORDS.length)]);
     },
     usePowerUp: function(player, powerUp) {
         switch (powerUp.powerUpType) {

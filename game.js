@@ -36,14 +36,13 @@ var state = {
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
         this.load.image("feather", BASE_PATH + "assets/feather.png?" + ASSET_VERSION, 24, 24);
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
-        this.load.image("chimney", BASE_PATH + "assets/chimney.png?" + ASSET_VERSION, 24, 96);
+        this.load.image("finish", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
     },
     create: function() {
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_dev);
-        this.levels.push(level_stefan);
 
         this.currentLevel = null;
 
@@ -288,8 +287,8 @@ var state = {
     spawnFinish: function() {
         var finishLine = this.add.sprite(
             this.game.width,
-            this.floor.body.top - 96,
-            'chimney',
+            this.floor.body.top - 160,
+            'finish',
             0,
             this.finishLines
         );

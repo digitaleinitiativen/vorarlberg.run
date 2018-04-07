@@ -124,6 +124,12 @@ var gameState = {
             level.events.onInputDown.add(function(level) {
                 this.start(level.data);
             }, this);
+            level.events.onInputOver.add(function(level) {
+                level.fill = "#ffa500";
+            });
+            level.events.onInputOut.add(function(level) {
+                level.fill = "#000";
+            });
         }
 
         this.scoreText = this.add.text(

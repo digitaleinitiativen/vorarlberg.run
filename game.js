@@ -62,6 +62,7 @@ var state = {
         this.platforms = this.add.group();
         this.presents = this.add.group();
         this.powerUps = this.add.group();
+        this.powerUpNotifications = this.add.group();
         this.finishLines = this.add.group();
         this.obstacles = this.add.group();
 
@@ -177,7 +178,7 @@ var state = {
             this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
             this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
             this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
-            this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
+            this.game.physics.arcade.overlap(this.player, this.enemies, this.removeLife, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
             this.player.body.x = this.world.width / 4;
@@ -211,9 +212,12 @@ var state = {
         this.scoreText.setText("HOWDY, SELECT LEVEL:");
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
+        this.player.lifes = 1;
+        this.extraLifeNotifications = [];
         this.enemies.removeAll();
         this.platforms.removeAll();
         this.powerUps.removeAll();
+        this.powerUpNotifications.removeAll();
         this.obstacles.removeAll();
         this.finishLines.removeAll();
     },
@@ -337,36 +341,52 @@ var state = {
         this.showHint(enemy, YAY_WORDS[Math.floor(Math.random() * YAY_WORDS.length)]);
     },
     usePowerUp: function(player, powerUp) {
+        var notification = this.powerUpNotifications.create(
+            this.game.width - 20 - (this.powerUpNotifications.countLiving() + 1) * 30,
+            20,
+            powerUp.powerUpType);
+
+        var removeCallback = function() { notification.kill(); }
+
         switch (powerUp.powerUpType) {
             case "timefreeze":
-                this.reduceGameSpeed(0.5, 2500);
+                this.reduceGameSpeed(0.5, 2500, removeCallback);
                 break;
             case "feather":
-                this.reduceGravity(0.7, 2500);
+                this.reduceGravity(0.7, 2500, removeCallback);
+                break;
+            case "shield":
+                this.extraLifeNotifications.push(notification);
+                this.addLife();
                 break;
         }
 
         powerUp.kill();
     },
-    reduceGameSpeed: function(factor, duration) {
+    reduceGameSpeed: function(factor, duration, removeCallback) {
         this.game.time.slowMotion = 1 / factor;
 
         var timer = this.game.time.create(this);
         timer.add(duration, function() {
             this.game.time.slowMotion = 1;
+            removeCallback();
             timer.stop();
         }, this);
         timer.start();
     },
-    reduceGravity: function(factor, duration) {
+    reduceGravity: function(factor, duration, removeCallback) {
         this.player.body.gravity.y *= factor;
 
         var timer = this.game.time.create(this);
         timer.add(duration, function() {
             this.player.body.gravity.y /= factor;
+            removeCallback();
             timer.stop();
         }, this);
         timer.start();
+    },
+    addLive: function() {
+        this.player.lifes++;
     },
     addScore: function(addWhat) {
         this.score += addWhat;
@@ -390,6 +410,14 @@ var state = {
         move.onComplete.add(function() { hint.kill() }, this);
         move.start();
 
+    },
+    removeLife: function(player, enemy) {
+        player.lifes--;
+        if (player.lifes <= 0) {
+            this.setGameOver(player, enemy);
+        } else {
+            this.extraLifeNotifications.pop().kill();
+        }
     },
     setGameOver: function(player, enemy) {
         this.endGame();

@@ -91,9 +91,9 @@ var state = {
                 this.levelselect
             );
             level.inputEnabled = true;
-            var c = this.levels[i];
-            level.events.onInputDown.add(function() {
-                this.start(c);
+            level.data = this.levels[i];
+            level.events.onInputDown.add(function(level) {
+                this.start(level.data);
             }, this);
         }
 
@@ -368,8 +368,8 @@ var state = {
 };
 
 var game = new Phaser.Game(
-    800,
-    200,
+    680,
+    320,
     Phaser.CANVAS,
     document.querySelector('#screen'),
     state

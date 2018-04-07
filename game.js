@@ -2,7 +2,7 @@ var BASE_SPEED = 100;
 var ENEMY_SPEED = BASE_SPEED * 1.8;
 var GRAVITY = 1200;
 var JUMP = 580;
-var ASSET_VERSION = 1; //(new Date()).getTime();
+var ASSET_VERSION = 2; //(new Date()).getTime();
 var BASE_PATH = '';
 var YAY_WORDS = [
     'YAY, A GAME BOY',
@@ -253,7 +253,7 @@ var state = {
         this.game.physics.enable(enemy);
         enemy.body.velocity.x = conf.speed;
         enemy.body.gravity.y = conf.gravity;
-        enemy.body.setSize(24, 36, 12, 0);
+        enemy.body.setSize(24, 48, 12, 0);
 
         enemy.animations.add('run', [9, 8, 7, 6, 5, 4, 3, 2], 12, true);
         enemy.animations.add('broken', [0], 1, false);

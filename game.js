@@ -20,10 +20,12 @@ var NEJ_WORDS = [
     'THROW IT AWAY DIEGO',
     'WHAT WAS THAT',
     'LOOOOOOOOL'
-];
+]; 
 
-var state = {
+var preloadState = {
     preload: function() {
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.scale.pageAlignHorizontally = true;
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
         this.load.spritesheet("enemy.kid", BASE_PATH + "assets/enemy.png?" + ASSET_VERSION, 96, 96, 3);
         this.load.spritesheet("jetpack-char", BASE_PATH + "assets/jetpack-char.png?" + ASSET_VERSION, 32, 32, 5);
@@ -39,11 +41,24 @@ var state = {
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
         this.load.image("finish", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
+        this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
     },
     create: function() {
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.pageAlignHorizontally = true;
-        
+        this.state.start('splash');
+    }
+}
+var splashState = {
+    create: function() {
+        var splash = this.add.sprite(0, 0, 'splash');
+        splash.inputEnabled = true;
+        splash.events.onInputDown.add(function() {
+            this.state.start('game');
+        }, this);
+    }
+}
+var gameState = {
+    
+    create: function() {        
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_dev);
@@ -454,6 +469,10 @@ var game = new Phaser.Game(
     680,
     320,
     Phaser.CANVAS,
-    document.querySelector('#screen'),
-    state
+    document.querySelector('#screen')
 );
+
+game.state.add('preload', preloadState);
+game.state.add('game', gameState);
+game.state.add('splash', splashState);
+game.state.start('preload');

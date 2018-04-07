@@ -34,6 +34,8 @@ var state = {
         this.load.image("present", BASE_PATH + "assets/present.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
+        this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
+        this.load.image("feather", BASE_PATH + "assets/feather.png?" + ASSET_VERSION, 24, 24);
         this.load.image("chimney", BASE_PATH + "assets/chimney.png?" + ASSET_VERSION, 24, 96);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
     },
@@ -58,6 +60,7 @@ var state = {
         this.enemies = this.add.group();
         this.platforms = this.add.group();
         this.presents = this.add.group();
+        this.powerUps = this.add.group();
         this.finishLines = this.add.group();
         this.obstacles = this.add.group();
 
@@ -119,6 +122,7 @@ var state = {
     },
     update: function() {
         this.game.physics.arcade.collide(this.player, this.floor);
+        this.game.physics.arcade.collide(this.powerUps, this.floor);
         this.game.physics.arcade.collide(this.player, this.platforms);
         this.game.physics.arcade.collide(this.enemies, this.floor);
 
@@ -136,6 +140,12 @@ var state = {
                     obj.addScore(-1000);
                 }
             });
+            this.powerUps.forEachAlive(function(powerUp) {
+                if(powerUp.body.y > this.game.world.height) {
+                    powerUp.kill();
+                }
+            });
+
 
             if(!this.gameOver) this.addScore(Math.round(this.time.physicsElapsed * 100));
 
@@ -168,6 +178,7 @@ var state = {
             this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
+            this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
             this.player.body.x = this.world.width / 4;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
@@ -200,9 +211,10 @@ var state = {
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.enemies.removeAll();
+        this.platforms.removeAll();
+        this.powerUps.removeAll();
         this.obstacles.removeAll();
         this.finishLines.removeAll();
-        this.platforms.removeAll();
     },
     setSpawnTimer: function() {
         if(this.currentSpawnItem >= this.currentLevel.spawns.length) return;
@@ -219,11 +231,14 @@ var state = {
                 this.spawnEnemy(item.conf);
                 break;
             case "platform":
-                this.spawnPlatform(item);
+                this.spawnPlatform(item.conf);
                 break;
-            break;
             case "finish":
                 this.spawnFinish(item.conf);
+                break;
+            case "powerup":
+                this.spawnPowerUp(item.conf);
+                break;
             break;
             case "obstacle":
                 this.spawnObstacle(item.conf);
@@ -267,16 +282,14 @@ var state = {
         obstacle.body.velocity.x = conf.speed;
         obstacle.body.immovable = true;
     },
-    spawnPlatform: function(item) {
-        if(!item.speed) item.speed = -BASE_SPEED;
-
+    spawnPlatform: function() {
         var platform = this.platforms.create(
             this.game.width,
             this.floor.body.top - 60,
             'platform'
         );
         this.game.physics.enable(platform);
-        platform.body.velocity.x = item.speed / 1.5;
+        platform.body.velocity.x = -BASE_SPEED / 1.2;
         platform.body.setSize(72, 1, 0, 0);
         platform.body.immovable = true;
     },
@@ -303,6 +316,17 @@ var state = {
         present.body.velocity.x = -BASE_SPEED * 1.8;
         present.body.gravity.y = GRAVITY;
     },
+    spawnPowerUp: function(conf) {
+        var powerUp = this.powerUps.create(
+            this.game.width,
+            this.floor.body.top - 24,
+            conf.powerUpType
+        );
+        powerUp.powerUpType = conf.powerUpType;
+
+        this.game.physics.enable(powerUp);
+        powerUp.body.velocity.x = -BASE_SPEED / 1.2;
+    },
     catchPresent: function(enemy, present) {
         enemy.body.velocity.x *= 1.1;
         enemy.body.velocity.y -= 60;
@@ -310,6 +334,38 @@ var state = {
         present.kill();
         this.addScore(5000);
         this.showHint(enemy, YAY_WORDS[Math.floor(Math.random() * YAY_WORDS.length)]);
+    },
+    usePowerUp: function(player, powerUp) {
+        switch (powerUp.powerUpType) {
+            case "timefreeze":
+                this.reduceGameSpeed(0.5, 2500);
+                break;
+            case "feather":
+                this.reduceGravity(0.7, 2500);
+                break;
+        }
+
+        powerUp.kill();
+    },
+    reduceGameSpeed: function(factor, duration) {
+        this.game.time.slowMotion = 1 / factor;
+
+        var timer = this.game.time.create(this);
+        timer.add(duration, function() {
+            this.game.time.slowMotion = 1;
+            timer.stop();
+        }, this);
+        timer.start();
+    },
+    reduceGravity: function(factor, duration) {
+        this.player.body.gravity.y *= factor;
+
+        var timer = this.game.time.create(this);
+        timer.add(duration, function() {
+            this.player.body.gravity.y /= factor;
+            timer.stop();
+        }, this);
+        timer.start();
     },
     addScore: function(addWhat) {
         this.score += addWhat;

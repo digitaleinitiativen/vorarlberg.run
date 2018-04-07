@@ -2,15 +2,29 @@ var level_dornbirn = {
 	title: 'Dornbirn',
 	spawns: [
 		{
+			type: 'powerup',
+			time: 100,
+			conf: {
+				powerUpType: "timefreeze"
+			}
+		},
+		{
+			type: "platform",
+			time: 400
+		},
+		{
 			type: 'enemy',
-			time: 2500,
+			time: 3500,
 			conf: {
 
 			}
 		},
 		{
-			type: "platform",
-			time: 500
+			type: 'powerup',
+			time: 0,
+			conf: {
+				powerUpType: "feather"
+			}
 		},
 		{
 			type: 'enemy',
@@ -35,7 +49,7 @@ var level_dornbirn = {
 		},
 		{
 			type: "platform",
-			time: 100
+			time: 800
 		},
 		{
 			type: 'enemy',

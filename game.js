@@ -243,7 +243,7 @@ var state = {
 
         enemy.animations.play('run');
     },
-    spawnPlatform: function(conf) {
+    spawnPlatform: function(item) {
         if(!item.speed) item.speed = -BASE_SPEED;
 
         var platform = this.platforms.create(

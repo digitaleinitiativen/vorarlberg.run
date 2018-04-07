@@ -27,7 +27,9 @@ var preloadState = {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.pageAlignHorizontally = true;
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
-        this.load.spritesheet("enemy.kid", BASE_PATH + "assets/enemy.png?" + ASSET_VERSION, 96, 96, 3);
+        this.load.spritesheet("enemy-red", BASE_PATH + "assets/enemy-red.png?" + ASSET_VERSION, 96, 96, 3);
+        this.load.spritesheet("enemy-blue", BASE_PATH + "assets/enemy-blue.png?" + ASSET_VERSION, 96, 96, 3);
+        this.load.spritesheet("enemy-yellow", BASE_PATH + "assets/enemy-yellow.png?" + ASSET_VERSION, 96, 96, 3);
         this.load.spritesheet("jetpack-char", BASE_PATH + "assets/jetpack-char.png?" + ASSET_VERSION, 32, 32, 5);
         this.load.image("background.0", BASE_PATH + "assets/back-0.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.1", BASE_PATH + "assets/back-1.png?" + ASSET_VERSION, 320, 320);
@@ -279,11 +281,12 @@ var gameState = {
     spawnEnemy: function(conf) {
         if(!conf.speed) conf.speed = -ENEMY_SPEED;
         if(!conf.gravity) conf.gravity = GRAVITY;
+        if(!conf.image) conf.image = 'enemy-yellow';
 
         var enemy = this.enemies.create(
             this.game.width,
             this.floor.body.top - 96,
-            'enemy.kid'
+            conf.image
         );
         this.game.physics.enable(enemy);
         enemy.body.velocity.x = conf.speed;

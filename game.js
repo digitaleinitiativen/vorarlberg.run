@@ -32,6 +32,7 @@ var state = {
         this.load.image("floor", BASE_PATH + "assets/floor.png?" + ASSET_VERSION, 800, 8);
         this.load.image("present", BASE_PATH + "assets/present.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
+        this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
     },
     create: function() {
 
@@ -53,6 +54,8 @@ var state = {
         this.floor.body.immovable = true;
 
         this.enemies = this.add.group();
+
+        this.platforms = this.add.group();
 
         this.presents = this.add.group();
 
@@ -113,6 +116,7 @@ var state = {
     },
     update: function() {
         this.game.physics.arcade.collide(this.player, this.floor);
+        this.game.physics.arcade.collide(this.player, this.platforms);
         this.game.physics.arcade.collide(this.enemies, this.floor);
 
         if (this.gameStarted) {
@@ -161,6 +165,7 @@ var state = {
             this.background3.tilePosition.x -= this.time.physicsElapsed * SPEED / 1.5;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
+            this.player.body.x = this.world.width / 4;
             if(!this.player.body.touching.down)
                 this.player.animations.play('jump');
             else
@@ -204,6 +209,10 @@ var state = {
         switch(item.type) {
             case "enemy":
                 this.spawnEnemy(item.conf);
+                break;
+            case "platform":
+                this.spawnPlatform(item);
+                break;
             break;
         }
 
@@ -229,6 +238,19 @@ var state = {
         enemy.animations.add('broken', [0], 1, false);
 
         enemy.animations.play('run');
+    },
+    spawnPlatform: function(conf) {
+        if(!conf.speed) conf.speed = -SPEED;
+
+        var platform = this.platforms.create(
+            this.game.width,
+            this.floor.body.top - 60,
+            'platform'
+        );
+        this.game.physics.enable(platform);
+        platform.body.velocity.x = conf.speed / 1.5;
+        platform.body.setSize(72, 1, 0, 0);
+        platform.body.immovable = true;
     },
     spawnPresent: function() {
         if(this.presents.countLiving() > 0) return;

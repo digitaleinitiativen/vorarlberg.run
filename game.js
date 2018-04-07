@@ -150,7 +150,6 @@ var state = {
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.UP) 
             || this.game.input.activePointer.isDown
         ) {
-            console.log(this.gameStarted, this.gameStopped);
             if(this.upFree) {
                 if(!this.gameStarted) {
                 } else if(this.gameStopped) {
@@ -190,7 +189,6 @@ var state = {
                 this.player.animations.play('run');
             }
         } else {
-            console.log(this.gameWon);
             if(this.gameWon) this.player.animations.play('win');
             else this.player.animations.play('broken');
         }

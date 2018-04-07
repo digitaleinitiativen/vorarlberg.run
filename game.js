@@ -36,7 +36,6 @@ var preloadState = {
         this.load.image("background.2", BASE_PATH + "assets/back-2.png?" + ASSET_VERSION, 320, 320);
         //this.load.image("background.3", BASE_PATH + "assets/background-3.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("ground", BASE_PATH + "assets/tile-ground.png?" + ASSET_VERSION, 24, 24);
-        this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
         this.load.image("feather", BASE_PATH + "assets/jetpack.png?" + ASSET_VERSION, 24, 24);
@@ -56,6 +55,9 @@ var preloadState = {
         this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);
         this.load.image("spezial", BASE_PATH + "assets/spezial.png?" + ASSET_VERSION, 66, 100);
         this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
+        this.load.image('water', BASE_PATH + 'assets/water.png?' + ASSET_VERSION, 64, 41);
+        this.load.image('fish', BASE_PATH + 'assets/fish.png?' + ASSET_VERSION, 24, 32);
+        this.load.image('gameover', BASE_PATH + 'assets/gameover.png?' + ASSET_VERSION, 680, 320);
     },
     create: function() {
         this.state.start('splash');
@@ -66,6 +68,15 @@ var splashState = {
         var splash = this.add.sprite(0, 0, 'splash');
         splash.inputEnabled = true;
         splash.events.onInputDown.add(function() {
+            this.state.start('game');
+        }, this);
+    }
+}
+var gameoverState = {
+    create: function() {
+        var gameover = this.add.sprite(0, 0, 'gameover');
+        gameover.inputEnabled = true;
+        gameover.events.onInputDown.add(function() {
             this.state.start('game');
         }, this);
     }
@@ -99,6 +110,7 @@ var gameState = {
         this.decorations = this.add.group();
         this.enemies = this.add.group();
         this.obstacles = this.add.group();
+        this.floorstacles = this.add.group();
         this.powerUps = this.add.group();
         this.powerUpNotifications = this.add.group();
 
@@ -223,12 +235,17 @@ var gameState = {
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);
+            this.floorstacles.forEachAlive(function(floorstacle) {
+                if(floorstacle.tilePosition)
+                    floorstacle.tilePosition.x += this.time.physicsElapsed * 150;
+            }, this);
             this.player.body.x = this.world.width / 4;
             this.jetpack.body.x = (this.world.width / 4) - 14;
             this.jetpack.body.y = this.player.body.y + 32;
             this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             this.game.physics.arcade.overlap(this.player, this.obstacles, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.player, this.trapholes, this.fallDown, null, this);
+            this.game.physics.arcade.overlap(this.player, this.floorstacles, this.setGameOver, null, this);
             if(!this.player.body.touching.down) {
                 if (this.player.hasJetpack) {
                     this.jetpack.animations.play("fly");
@@ -277,6 +294,7 @@ var gameState = {
         this.trapholes.removeAll();
         this.powerUpNotifications.removeAll();
         this.obstacles.removeAll();
+        this.floorstacles.removeAll();
         this.finishLines.removeAll();
     },
     setSpawnTimer: function() {
@@ -314,6 +332,9 @@ var gameState = {
             case "traphole":
                 this.spawnTraphole(item.conf);
                 break;
+            case "floorstacle":
+                this.spawnFloorstacle(item.conf);
+                break;
         }
 
         this.currentSpawnItem++;
@@ -346,6 +367,45 @@ var gameState = {
         enemy.animations.add('broken', [2], 1, false);
 
         enemy.animations.play('run');
+    },
+    spawnFloorstacle: function(conf) {
+        if(!conf) conf = {};
+
+        var floorstacle = this.add.tileSprite(
+            this.game.width,
+            this.floor.body.top - 5,
+            50,
+            41,
+            'water',
+            0,
+            this.floorstacles
+        );
+        this.game.physics.enable(floorstacle);
+        floorstacle.body.velocity.x = -BASE_SPEED;
+        floorstacle.body.immovable = true;
+
+        var fish = this.add.sprite(
+            this.game.width + floorstacle.body.width / 2,
+            this.floor.body.top + 30,
+            'fish',
+            0,
+            this.floorstacles
+        );
+        this.game.physics.enable(fish);
+        fish.body.velocity.x = -BASE_SPEED;
+        fish.body.immovable = true;
+        fish.anchor.x = 0.5;
+        fish.anchor.y = 0.5;
+
+        var jumpTimer = this.game.time.create(this);
+        jumpTimer.add(3900, function() {
+            fish.body.gravity.y = GRAVITY * 0.9;
+            fish.body.velocity.y -= JUMP * 1;
+            jumpTimer.add(500, function() {
+                fish.rotation = Math.PI;
+            });
+        });
+        jumpTimer.start();
     },
     spawnObstacle: function(conf) {
         if(!conf) conf = {};
@@ -544,12 +604,19 @@ var gameState = {
 
         this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
         this.player.animations.play('broken');
+        var timer = this.game.time.create(this);
+        timer.add(2000, function() {
+            this.state.start('gameover');
+        }, this);
+        timer.start();
+
     },
     setWin: function(player, finishLine) {
         this.gameWon = true;
         this.endGame();
         this.showHint(finishLine, 'YOU ARE A WINNER!');
         this.player.animations.play('win');
+        this.levelselect.visible = true;
     },
     endGame: function() {
         this.timeOver = this.game.time.now;
@@ -557,7 +624,6 @@ var gameState = {
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
         this.cityText.setText("");
-        this.levelselect.visible = true;
 
         this.player.body.velocity.x = 0;
         this.enemies.forEachAlive(function(enemy) {
@@ -575,6 +641,9 @@ var gameState = {
         });
         this.obstacles.forEachAlive(function(obstacle) {
             obstacle.body.velocity.x = 0;
+        });
+        this.floorstacles.forEachAlive(function(floorstacle) {
+            floorstacle.body.velocity.x = 0;
         });
         this.powerUps.forEachAlive(function(powerUp) {
             powerUp.body.velocity.x = 0;
@@ -595,4 +664,5 @@ var game = new Phaser.Game(
 game.state.add('preload', preloadState);
 game.state.add('game', gameState);
 game.state.add('splash', splashState);
+game.state.add('gameover', gameoverState);
 game.state.start('preload');

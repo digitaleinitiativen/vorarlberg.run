@@ -342,7 +342,7 @@ var state = {
                 this.player.hasJetpack = true;
                 this.jetpack.visible = true;
                 var that = this;
-                this.reduceGravity(0.7, 2500, function() {
+                this.reduceGravity(0.7, 4000, function() {
                     removeCallback();
                     that.jetpack.visible = false;
                     that.player.hasJetpack = false;

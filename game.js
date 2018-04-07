@@ -24,7 +24,7 @@ var NEJ_WORDS = [
 
 var state = {
     preload: function() {
-        this.load.spritesheet("player",BASE_PATH + 'assets/tile-santa.png?' + ASSET_VERSION, 48, 48, 10);
+        this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
         this.load.spritesheet("enemy.kid", BASE_PATH + "assets/tile-fan.png?" + ASSET_VERSION, 48, 48, 20);
         this.load.image("background.0", BASE_PATH + "assets/background.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("background.1", BASE_PATH + "assets/background-1.png?" + ASSET_VERSION, 1600, 200);
@@ -66,8 +66,9 @@ var state = {
         this.obstacles = this.add.group();
 
         this.player = this.add.sprite(0, 0, 'player');
-        this.player.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
-        this.player.animations.add('jump', [8], 1, false);
+        this.player.animations.add('run', [0, 1, 2, 3, 4, 5], 12, true);
+        this.player.animations.add('stand', [6], 1, false);
+        this.player.animations.add('jump', [7], 1, false);
         this.player.animations.add('win', [8], 1, false);
         this.player.animations.add('broken', [9], 1, false);
 
@@ -75,7 +76,7 @@ var state = {
 
         this.game.physics.enable(this.player);
         this.player.body.gravity.y = GRAVITY;
-        this.player.body.setSize(24, 36, 12, 0);
+        this.player.body.setSize(24, 80, 36, 0);
 
         this.hints = this.add.group();
 

@@ -26,10 +26,10 @@ var state = {
     preload: function() {
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
         this.load.spritesheet("enemy.kid", BASE_PATH + "assets/tile-fan.png?" + ASSET_VERSION, 48, 48, 20);
-        this.load.image("background.0", BASE_PATH + "assets/background.png?" + ASSET_VERSION, 1600, 200);
-        this.load.image("background.1", BASE_PATH + "assets/background-1.png?" + ASSET_VERSION, 1600, 200);
-        this.load.image("background.2", BASE_PATH + "assets/background-2.png?" + ASSET_VERSION, 1600, 200);
-        this.load.image("background.3", BASE_PATH + "assets/background-3.png?" + ASSET_VERSION, 1600, 200);
+        this.load.image("background.0", BASE_PATH + "assets/back-0.png?" + ASSET_VERSION, 320, 320);
+        this.load.image("background.1", BASE_PATH + "assets/back-1.png?" + ASSET_VERSION, 320, 320);
+        this.load.image("background.2", BASE_PATH + "assets/back-2.png?" + ASSET_VERSION, 320, 320);
+        //this.load.image("background.3", BASE_PATH + "assets/background-3.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("ground", BASE_PATH + "assets/tile-ground.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
@@ -52,7 +52,7 @@ var state = {
         this.background0 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.0');
         this.background1 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.1');
         this.background2 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.2');
-        this.background3 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.3');
+        //this.background3 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.3');
 
         this.floor = this.add.tileSprite(0, this.world.height - 24, this.world.width, 24, 'ground');
         this.game.physics.enable(this.floor);
@@ -89,7 +89,7 @@ var state = {
                 50 + 35 * (i % levelsInRow),
                 this.levels[i].title.toUpperCase(),
                 {
-                    fill: '#ffdd00',
+                    fill: '#000',
                     align: 'center',
                     fontSize: 20
                 },
@@ -107,15 +107,13 @@ var state = {
             10,
             "",
             {
-                fill: '#ffdd00',
-                align: 'left'
+                fill: '#000',
+                align: 'left',
+                fontSize: 20
             }
         );
-        this.scoreText.fontSize = 20;
-
 
         this.score = 0;
-
 
         this.upFree = true;
 
@@ -167,7 +165,7 @@ var state = {
             this.background0.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 5;
             this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
             this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
-            this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
+//            this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.removeLife, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
@@ -368,7 +366,7 @@ var state = {
             focusOn.y,
             text,
             {
-                fill: '#ffdd00',
+                fill: '#000',
                 align: 'center'
             }
         );

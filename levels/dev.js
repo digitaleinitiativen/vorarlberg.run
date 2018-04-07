@@ -2,15 +2,8 @@ var level_dev = {
 	title: 'Testerei',
 	spawns: [
 		{
-			type: 'enemy',
-			time: 0,
-			conf: {
-				
-			}
-		},
-		{
-			type: 'enemy',
-			time: 200,
+			type: 'finish',
+			time: 1000,
 			conf: {
 				
 			}

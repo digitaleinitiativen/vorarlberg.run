@@ -60,8 +60,8 @@ var state = {
         this.game.physics.enable(this.floor);
         this.floor.body.immovable = true;
 
-        this.enemies = this.add.group();
         this.platforms = this.add.group();
+        this.enemies = this.add.group();
         this.powerUps = this.add.group();
         this.powerUpNotifications = this.add.group();
         this.finishLines = this.add.group();
@@ -73,7 +73,6 @@ var state = {
         this.player.animations.add('jump', [7], 1, false);
         this.player.animations.add('win', [8], 1, false);
         this.player.animations.add('broken', [9], 1, false);
-
         this.player.animations.play('run');
 
         this.game.physics.enable(this.player);
@@ -81,7 +80,6 @@ var state = {
         this.player.body.setSize(24, 80, 36, 0);
 
         this.hints = this.add.group();
-
         this.levelselect = this.add.group();
 
         var levelsInRow = 4;
@@ -116,9 +114,7 @@ var state = {
         );
 
         this.score = 0;
-
         this.upFree = true;
-
         this.reset();
     },
     update: function() {
@@ -140,17 +136,16 @@ var state = {
                 }
             });
 
-
-            if(!this.gameOver) this.addScore(Math.round(this.time.physicsElapsed * 100));
-
+            if(!this.gameStopped) this.addScore(Math.round(this.time.physicsElapsed * 100));
         }
 
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.UP) 
             || this.game.input.activePointer.isDown
         ) {
+            console.log(this.gameStarted, this.gameStopped);
             if(this.upFree) {
                 if(!this.gameStarted) {
-                } else if(this.gameOver) {
+                } else if(this.gameStopped) {
                 } else {
                     if(this.player.body.touching.down)
                         this.player.body.velocity.y -= JUMP;
@@ -161,9 +156,7 @@ var state = {
             this.upFree = true;
         }
 
-
-
-        if (!this.gameOver) {
+        if (!this.gameStopped) {
             this.background0.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 5;
             this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
             this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
@@ -179,26 +172,27 @@ var state = {
                 this.player.animations.play('jump');
             else
                 this.player.animations.play('run');
-        } else this.player.animations.play('broken');
+        } else {
+            console.log(this.gameWon);
+            if(this.gameWon) this.player.animations.play('win');
+            else this.player.animations.play('broken');
+        }
 
     },
     start: function(level) {
         this.reset();
+        this.gameStarted = true;
 
         this.currentLevel = level;
         this.levelselect.visible = false;
-
         this.currentSpawnItem = 0;
         this.setSpawnTimer();
-
         this.scoreText.setText("SCORE: "+this.score);
-
-        this.gameStarted = true;
-        this.gameOver = false;
     },
     reset: function() {
         this.gameStarted = false;
-        this.gameOver = false;
+        this.gameStopped = false;
+        this.gameWon = false;
         this.score = 0;
         this.scoreText.setText("HOWDY, SELECT LEVEL:");
         this.floor.reset(0, this.world.height - this.floor.body.height);
@@ -391,23 +385,28 @@ var state = {
         }
     },
     setGameOver: function(player, enemy) {
+        this.gameWon = false;
         this.endGame();
+
+        if(this.player.body.velocity.y < 0) this.player.body.velocity.y = 0;
 
         this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
         this.player.animations.play('broken');
     },
     setWin: function(player, finishLine) {
+        this.gameWon = true;
         this.endGame();
         this.showHint(finishLine, 'YOU ARE A WINNER!');
         this.player.animations.play('win');
     },
     endGame: function() {
         this.timeOver = this.game.time.now;
-        this.gameOver = true;
+        this.gameStopped = true;
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
         this.levelselect.visible = true;
 
+        this.player.body.velocity.x = 0;
         this.enemies.forEachAlive(function(enemy) {
             enemy.body.velocity.x = 0;
             enemy.animations.play('broken');

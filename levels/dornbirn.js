@@ -14,14 +14,14 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 2500,
+			time: 3500,
 			conf: {
 
 			}
 		},
 		{
 			type: 'powerup',
-			time: 100,
+			time: 0,
 			conf: {
 				powerUpType: "feather"
 			}
@@ -47,5 +47,16 @@ var level_dornbirn = {
 				
 			}
 		},
+		{
+			type: "platform",
+			time: 800
+		},
+		{
+			type: 'enemy',
+			time: 1000,
+			conf: {
+
+			}
+		}
 	]
 }

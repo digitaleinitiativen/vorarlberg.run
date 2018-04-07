@@ -1,5 +1,6 @@
 var level_bludenz = {
 	title: 'Bludenz',
+	welcome: 'Sali in Bludensch',
 	spawns: [
 		{
 			type: 'enemy',

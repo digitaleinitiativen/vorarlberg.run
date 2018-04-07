@@ -1,5 +1,6 @@
 var level_bregenz = {
 	title: 'Bregenz',
+	welcome: "Zerfass z,Breagaz",
 	spawns: [
 		{
 			type: 'enemy',

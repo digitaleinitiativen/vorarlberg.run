@@ -1,5 +1,6 @@
 var level_uebersaxen = {
 	title: 'UEbersaxen',
+	welcome: "Hoi, in Uebersaxen",
 	spawns: [
 		{
 			type: 'finish',

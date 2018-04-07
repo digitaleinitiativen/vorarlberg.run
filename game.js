@@ -148,6 +148,17 @@ var gameState = {
             }
         );
 
+        this.cityText = this.add.text(
+            10,
+            40,
+            "hello",
+            {
+                fill: '#333',
+                align: 'center',
+                fontSize: 10
+            }
+        );
+
         this.score = 0;
         this.upFree = true;
         this.reset();
@@ -230,6 +241,7 @@ var gameState = {
         this.currentSpawnItem = 0;
         this.setSpawnTimer();
         this.scoreText.setText("SCORE: "+this.score);
+        this.cityText.setText(level.welcome.toUpperCase());
     },
     reset: function() {
         this.gameStarted = false;
@@ -237,6 +249,7 @@ var gameState = {
         this.gameWon = false;
         this.score = 0;
         this.scoreText.setText("HOWDY, SELECT LEVEL:");
+        this.cityText.setText("");
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.player.lifes = 1;
@@ -468,6 +481,7 @@ var gameState = {
         this.gameStopped = true;
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
+        this.cityText.setText("");
         this.levelselect.visible = true;
 
         this.player.body.velocity.x = 0;

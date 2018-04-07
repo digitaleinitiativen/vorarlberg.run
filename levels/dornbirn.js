@@ -1,5 +1,6 @@
 var level_dornbirn = {
 	title: 'Dornbirn',
+	welcome: "Bisch o z'Doarabira?",
 	spawns: [
 		{
 			type: 'powerup',

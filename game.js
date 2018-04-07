@@ -71,7 +71,7 @@ var gameState = {
         this.levels.push(level_feldkirch);
         this.levels.push(level_bludenz);
         this.levels.push(level_bregenz);
-        this.levels.push(level_dev);
+        this.levels.push(level_uebersaxen);
 
         this.currentLevel = null;
 
@@ -150,6 +150,17 @@ var gameState = {
                 fill: '#000',
                 align: 'left',
                 fontSize: 20
+            }
+        );
+
+        this.cityText = this.add.text(
+            10,
+            40,
+            "hello",
+            {
+                fill: '#333',
+                align: 'center',
+                fontSize: 10
             }
         );
 
@@ -235,6 +246,7 @@ var gameState = {
         this.currentSpawnItem = 0;
         this.setSpawnTimer();
         this.scoreText.setText("SCORE: "+this.score);
+        this.cityText.setText(level.welcome.toUpperCase());
     },
     reset: function() {
         this.gameStarted = false;
@@ -242,6 +254,7 @@ var gameState = {
         this.gameWon = false;
         this.score = 0;
         this.scoreText.setText("HOWDY, SELECT LEVEL:");
+        this.cityText.setText("");
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.player.lifes = 1;
@@ -489,6 +502,7 @@ var gameState = {
         this.gameStopped = true;
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
+        this.cityText.setText("");
         this.levelselect.visible = true;
 
         this.player.body.velocity.x = 0;

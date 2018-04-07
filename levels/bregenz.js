@@ -4,9 +4,15 @@ var level_bregenz = {
 	spawns: [
 		{
 			type: 'enemy',
-			time: 0,
+			time: 1,
 			conf: {
 				height: 60
+			}
+		},
+		{
+			type: 'floorstacle',
+			time: 0,
+			conf: {
 			}
 		},
 		{
@@ -35,6 +41,18 @@ var level_bregenz = {
 			time: 1000,
 			conf: {
 				height: 180
+			}
+		},
+		{
+			type: 'floorstacle',
+			time: 0,
+			conf: {
+			}
+		},
+		{
+			type: 'floorstacle',
+			time: 0,
+			conf: {
 			}
 		},
 		{
@@ -80,10 +98,22 @@ var level_bregenz = {
 			}
 		},
 		{
+			type: 'floorstacle',
+			time: 1,
+			conf: {
+			}
+		},		
+		{
 			type: 'platform',
 			time: 1200,
 			conf: {
 				height: 120
+			}
+		},
+		{
+			type: 'floorstacle',
+			time: 1,
+			conf: {
 			}
 		},
 		{
@@ -93,6 +123,13 @@ var level_bregenz = {
 				height: 180
 			}
 		},
+		{
+			type: 'floorstacle',
+			time: 2000,
+			conf: {
+			}
+		},
+
 		{
 			type: 'finish',
 			time: 1000,

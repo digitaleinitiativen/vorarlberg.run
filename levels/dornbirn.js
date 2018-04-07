@@ -2,6 +2,13 @@ var level_dornbirn = {
 	title: 'Dornbirn',
 	spawns: [
 		{
+			type: 'finish',
+			time: 0,
+			conf: {
+				
+			}
+		},
+		{
 			type: 'enemy',
 			time: 3000,
 			conf: {
@@ -12,7 +19,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 2000,
 			conf: {
-				speed: -SPEED * 1.2
+				speed: -ENEMY_SPEED * 1.2
 			}
 		},
 		{
@@ -21,6 +28,6 @@ var level_dornbirn = {
 			conf: {
 
 			}
-		}
+		},
 	]
 }

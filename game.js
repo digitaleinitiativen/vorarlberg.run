@@ -1,4 +1,5 @@
-var SPEED = 180;
+var BASE_SPEED = 100;
+var ENEMY_SPEED = BASE_SPEED * 1.8;
 var GRAVITY = 1200;
 var JUMP = 580;
 var ASSET_VERSION = 1; //(new Date()).getTime();
@@ -32,14 +33,13 @@ var state = {
         this.load.image("floor", BASE_PATH + "assets/floor.png?" + ASSET_VERSION, 800, 8);
         this.load.image("present", BASE_PATH + "assets/present.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
+        this.load.image("chimney", BASE_PATH + "assets/chimney.png?" + ASSET_VERSION, 24, 96);
     },
     create: function() {
-
         this.levels = [];
         this.levels.push(level_dornbirn);
 
         this.currentLevel = null;
-
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -53,12 +53,12 @@ var state = {
         this.floor.body.immovable = true;
 
         this.enemies = this.add.group();
-
         this.presents = this.add.group();
 
         this.player = this.add.sprite(0, 0, 'player');
         this.player.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
         this.player.animations.add('jump', [8], 1, false);
+        this.player.animations.add('win', [8], 1, false);
         this.player.animations.add('broken', [9], 1, false);
 
         this.player.animations.play('run');
@@ -70,6 +70,8 @@ var state = {
         this.hints = this.add.group();
 
         this.levelselect = this.add.group();
+
+        this.finishLines = this.add.group();
 
         var levelsInRow = 4;
         for(var i = 0; i < this.levels.length; i++) {
@@ -155,12 +157,13 @@ var state = {
 
 
         if (!this.gameOver) {
-            this.background0.tilePosition.x -= this.time.physicsElapsed * SPEED / 8;
-            this.background1.tilePosition.x -= this.time.physicsElapsed * SPEED / 4;
-            this.background2.tilePosition.x -= this.time.physicsElapsed * SPEED / 2;
-            this.background3.tilePosition.x -= this.time.physicsElapsed * SPEED / 1.5;
+            this.background0.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 5;
+            this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
+            this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
+            this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
+            this.game.physics.arcade.overlap(this.player, this.finishLines, this.setWin, null, this);
             if(!this.player.body.touching.down)
                 this.player.animations.play('jump');
             else
@@ -205,13 +208,16 @@ var state = {
             case "enemy":
                 this.spawnEnemy(item.conf);
             break;
+            case "finish":
+                this.spawnFinish(item.conf);
+            break;
         }
 
         this.currentSpawnItem++;
         this.setSpawnTimer();
     },
     spawnEnemy: function(conf) {
-        if(!conf.speed) conf.speed = -SPEED;
+        if(!conf.speed) conf.speed = -ENEMY_SPEED;
         if(!conf.gravity) conf.gravity = GRAVITY;
 
         var enemy = this.enemies.create(
@@ -230,6 +236,18 @@ var state = {
 
         enemy.animations.play('run');
     },
+    spawnFinish: function() {
+        var finishLine = this.add.sprite(
+            this.game.width,
+            this.floor.body.top - 96,
+            'chimney',
+            0,
+            this.finishLines
+        );
+
+        this.game.physics.enable(finishLine);
+        finishLine.body.velocity.x = -BASE_SPEED;
+    },
     spawnPresent: function() {
         if(this.presents.countLiving() > 0) return;
         var present = this.presents.create(
@@ -238,7 +256,7 @@ var state = {
             'present'
         );
         this.game.physics.enable(present);
-        present.body.velocity.x = -SPEED;
+        present.body.velocity.x = -BASE_SPEED * 1.8;
         present.body.gravity.y = GRAVITY;
     },
     catchPresent: function(enemy, present) {
@@ -273,20 +291,31 @@ var state = {
 
     },
     setGameOver: function(player, enemy) {
+        this.endGame();
+
+        this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
+        this.player.animations.play('broken');
+    },
+    setWin: function(player, finishLine) {
+        this.endGame();
+        this.showHint(finishLine, 'YOU ARE A WINNER!');
+        this.player.animations.play('win');
+    },
+    endGame: function() {
         this.timeOver = this.game.time.now;
         this.gameOver = true;
+        this.spawnTimer.stop();
+        this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
+        this.levelselect.visible = true;
 
         this.enemies.forEachAlive(function(enemy) {
             enemy.body.velocity.x = 0;
             enemy.animations.play('broken');
         });
-        this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
-
-        this.spawnTimer.stop();
-        this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
-        this.levelselect.visible = true;
-        this.player.animations.play('broken');
-    }
+        this.finishLines.forEachAlive(function(finishLine) {
+            finishLine.body.velocity.x = 0;
+        });
+    }    
 };
 
 var game = new Phaser.Game(

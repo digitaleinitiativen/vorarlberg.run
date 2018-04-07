@@ -49,6 +49,7 @@ var preloadState = {
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
+        this.load.image("car", BASE_PATH + "assets/car.png?" + ASSET_VERSION, 64, 24);
         this.load.image("pfiff", BASE_PATH + "assets/pfiff.png?" + ASSET_VERSION, 66, 100);
         this.load.image("spezial", BASE_PATH + "assets/spezial.png?" + ASSET_VERSION, 66, 100);
         this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
@@ -298,6 +299,9 @@ var gameState = {
             case "obstacle":
                 this.spawnObstacle(item.conf);
                 break;
+            case "long-obstacle":
+                this.spawnLongObstacle(item.conf);
+                break;
             case "decoration":
                 this.spawnDecoration(item.conf);
                 break;
@@ -342,6 +346,21 @@ var gameState = {
         var obstacle = this.obstacles.create(
             this.game.width,
             this.floor.body.top - 50,
+            conf.image
+        );
+
+        this.game.physics.enable(obstacle);
+        obstacle.body.velocity.x = conf.speed;
+        obstacle.body.immovable = true;
+    },
+    spawnLongObstacle: function(conf) {
+        if(!conf) conf = {};
+        if(!conf.speed) conf.speed = -BASE_SPEED;
+        if(!conf.image) conf.image = 'car';
+        
+        var obstacle = this.obstacles.create(
+            this.game.width,
+            this.floor.body.top - 24,
             conf.image
         );
 

@@ -27,25 +27,25 @@ var level_feldkirch = {
 		},
 		{
 			type: 'powerup',
-			time: 2000,
+			time: 1600,
 			conf: {
 				powerUpType: "extraLife"
 			}
 		},
 		{
-			type: "obstacle",
-			time: 1000,
-		},
-		{
 			type: 'powerup',
-			time: 1500,
+			time: 500,
 			conf: {
 				powerUpType: "feather"
 			}
 		},
 		{
+			type: "long-obstacle",
+			time: 1000,
+		},
+		{
 			type: 'decoration',
-			time: 500,
+			time: 2000,
 			conf: {
 				image: 'flower2'
 			}
@@ -58,7 +58,14 @@ var level_feldkirch = {
 			}
 		},
 		{
-			type: 'obstacle',
+			type: 'powerup',
+			time: 100,
+			conf: {
+				powerUpType: "feather"
+			}
+		},
+		{
+			type: 'long-obstacle',
 			time: 500
 		},
 		{
@@ -139,8 +146,8 @@ var level_feldkirch = {
 			time: 250
 		},
 		{
-			type: 'obstacle',
-			time: 1500
+			type: 'long-obstacle',
+			time: 1000
 		},
 		{
 			type: 'enemy',
@@ -189,7 +196,14 @@ var level_feldkirch = {
 			}
 		},
 		{
-			type: 'obstacle',
+			type: 'powerup',
+			time: 200,
+			conf: {
+				powerUpType: "feather"
+			}
+		},
+		{
+			type: 'long-obstacle',
 			time: 500
 		},
 		{

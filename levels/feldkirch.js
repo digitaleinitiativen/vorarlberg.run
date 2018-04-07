@@ -19,8 +19,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower1'
+			}
+		},
+		{
 			type: 'powerup',
-			time: 2500,
+			time: 2000,
 			conf: {
 				powerUpType: "extraLife"
 			}
@@ -37,8 +44,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower2'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 2500,
+			time: 2000,
 			conf: {
 				speed: -ENEMY_SPEED * 1.2
 			}
@@ -55,8 +69,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower0'
+			}
+		},
+		{
 			type: "platform",
-			time: 1200
+			time: 700
 		},
 		{
 			type: 'enemy',
@@ -73,8 +94,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower2'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 1000,
+			time: 500,
 			conf: {
 			}
 		},
@@ -100,8 +128,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower3'
+			}
+		},
+		{
 			type: "platform",
-			time: 750
+			time: 250
 		},
 		{
 			type: 'obstacle',
@@ -115,8 +150,15 @@ var level_feldkirch = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower2'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 3500,
+			time: 3000,
 			conf: {
 				speed: -ENEMY_SPEED * 1.5
 			}

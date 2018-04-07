@@ -90,8 +90,15 @@ var level_dornbirn = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower1'
+			}
+		},
+		{
 			type: 'powerup',
-			time: 600,
+			time: 100,
 			conf: {
 				powerUpType: "timefreeze"
 			}
@@ -112,8 +119,15 @@ var level_dornbirn = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower3'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 3500,
+			time: 3000,
 			conf: {
 				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
@@ -131,8 +145,15 @@ var level_dornbirn = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower0'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 1500,
+			time: 1000,
 			conf: {
 				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
@@ -147,8 +168,15 @@ var level_dornbirn = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower2'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 2500,
+			time: 2000,
 			conf: {
 				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
@@ -181,8 +209,15 @@ var level_dornbirn = {
 			}
 		},
 		{
+			type: 'decoration',
+			time: 500,
+			conf: {
+				image: 'flower3'
+			}
+		},
+		{
 			type: 'enemy',
-			time: 4500,
+			time: 4000,
 			conf: {
 				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5

@@ -45,6 +45,7 @@ var preloadState = {
         this.load.image("flower0", BASE_PATH + "assets/flower0.png?" + ASSET_VERSION, 26, 32);
         this.load.image("flower1", BASE_PATH + "assets/flower1.png?" + ASSET_VERSION, 26, 32);
         this.load.image("flower2", BASE_PATH + "assets/flower2.png?" + ASSET_VERSION, 26, 32);
+        this.load.image("flower3", BASE_PATH + "assets/flower3.png?" + ASSET_VERSION, 26, 32);
         this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);

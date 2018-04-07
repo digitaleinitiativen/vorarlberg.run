@@ -420,6 +420,9 @@ var state = {
         this.obstacles.forEachAlive(function(obstacle) {
             obstacle.body.velocity.x = 0;
         });
+        this.powerUps.forEachAlive(function(powerUp) {
+            powerUp.body.velocity.x = 0;
+        });
     }    
 };
 

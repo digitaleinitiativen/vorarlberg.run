@@ -76,6 +76,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 1500,
 			conf: {
+				image: 'enemy-red',
 				speed: -ENEMY_SPEED * 1.2
 			}
 		},
@@ -83,6 +84,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 1500,
 			conf: {
+				image: 'enemy-red',
 				speed: -ENEMY_SPEED * 1.2
 			}
 		},
@@ -101,6 +103,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 4000,
 			conf: {
+				image: 'enemy-red',
 				speed: -ENEMY_SPEED * 1.2
 			}
 		},
@@ -108,6 +111,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 3500,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},
@@ -126,6 +130,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 1000,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},
@@ -133,6 +138,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 2500,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},
@@ -140,6 +146,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 2500,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},
@@ -158,6 +165,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 3000,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},
@@ -169,6 +177,7 @@ var level_dornbirn = {
 			type: 'enemy',
 			time: 4500,
 			conf: {
+				image: 'enemy-blue',
 				speed: -ENEMY_SPEED * 1.5
 			}
 		},

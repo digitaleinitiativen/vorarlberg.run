@@ -283,7 +283,7 @@ var state = {
             'platform'
         );
         this.game.physics.enable(platform);
-        platform.body.velocity.x = -BASE_SPEED / 1.2;
+        platform.body.velocity.x = -BASE_SPEED;
         platform.body.setSize(72, 1, 0, 0);
         platform.body.immovable = true;
     },
@@ -308,7 +308,7 @@ var state = {
         powerUp.powerUpType = conf.powerUpType;
 
         this.game.physics.enable(powerUp);
-        powerUp.body.velocity.x = -BASE_SPEED / 1.2;
+        powerUp.body.velocity.x = -BASE_SPEED;
     },
     usePowerUp: function(player, powerUp) {
         var notification = this.powerUpNotifications.create(

@@ -37,7 +37,7 @@ var level_feldkirch = {
 		},
 		{
 			type: 'enemy',
-			time: 1500,
+			time: 2500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.2
 			}

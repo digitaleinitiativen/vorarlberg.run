@@ -20,12 +20,14 @@ var NEJ_WORDS = [
     'THROW IT AWAY DIEGO',
     'WHAT WAS THAT',
     'LOOOOOOOOL'
-];
+]; 
 
-var state = {
+var preloadState = {
     preload: function() {
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.scale.pageAlignHorizontally = true;
         this.load.spritesheet("player",BASE_PATH + 'assets/char-sheet.png?' + ASSET_VERSION, 96, 96, 10);
-        this.load.spritesheet("enemy.kid", BASE_PATH + "assets/tile-fan.png?" + ASSET_VERSION, 48, 48, 20);
+        this.load.spritesheet("enemy.kid", BASE_PATH + "assets/enemy.png?" + ASSET_VERSION, 96, 96, 3);
         this.load.spritesheet("jetpack-char", BASE_PATH + "assets/jetpack-char.png?" + ASSET_VERSION, 32, 32, 5);
         this.load.image("background.0", BASE_PATH + "assets/back-0.png?" + ASSET_VERSION, 320, 320);
         this.load.image("background.1", BASE_PATH + "assets/back-1.png?" + ASSET_VERSION, 320, 320);
@@ -39,8 +41,24 @@ var state = {
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
         this.load.image("finish", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
+        this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
     },
     create: function() {
+        this.state.start('splash');
+    }
+}
+var splashState = {
+    create: function() {
+        var splash = this.add.sprite(0, 0, 'splash');
+        splash.inputEnabled = true;
+        splash.events.onInputDown.add(function() {
+            this.state.start('game');
+        }, this);
+    }
+}
+var gameState = {
+    
+    create: function() {        
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_feldkirch);
@@ -59,8 +77,8 @@ var state = {
         this.game.physics.enable(this.floor);
         this.floor.body.immovable = true;
 
-        this.enemies = this.add.group();
         this.platforms = this.add.group();
+        this.enemies = this.add.group();
         this.powerUps = this.add.group();
         this.powerUpNotifications = this.add.group();
         this.finishLines = this.add.group();
@@ -79,7 +97,6 @@ var state = {
         this.player.animations.add('jump', [7], 1, false);
         this.player.animations.add('win', [8], 1, false);
         this.player.animations.add('broken', [9], 1, false);
-
         this.player.animations.play('run');
 
         this.game.physics.enable(this.player);
@@ -87,7 +104,6 @@ var state = {
         this.player.body.setSize(24, 80, 36, 0);
 
         this.hints = this.add.group();
-
         this.levelselect = this.add.group();
 
         var levelsInRow = 4;
@@ -122,9 +138,7 @@ var state = {
         );
 
         this.score = 0;
-
         this.upFree = true;
-
         this.reset();
     },
     update: function() {
@@ -146,9 +160,7 @@ var state = {
                 }
             });
 
-
-            if(!this.gameOver) this.addScore(Math.round(this.time.physicsElapsed * 100));
-
+            if(!this.gameStopped) this.addScore(Math.round(this.time.physicsElapsed * 100));
         }
 
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.UP) 
@@ -156,7 +168,7 @@ var state = {
         ) {
             if(this.upFree) {
                 if(!this.gameStarted) {
-                } else if(this.gameOver) {
+                } else if(this.gameStopped) {
                 } else {
                     if(this.player.body.touching.down)
                         this.player.body.velocity.y -= JUMP;
@@ -167,9 +179,7 @@ var state = {
             this.upFree = true;
         }
 
-
-
-        if (!this.gameOver) {
+        if (!this.gameStopped) {
             this.background0.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 5;
             this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
             this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
@@ -194,26 +204,26 @@ var state = {
                 this.jetpack.animations.play("off");
                 this.player.animations.play('run');
             }
-        } else this.player.animations.play('broken');
+        } else {
+            if(this.gameWon) this.player.animations.play('win');
+            else this.player.animations.play('broken');
+        }
 
     },
     start: function(level) {
         this.reset();
+        this.gameStarted = true;
 
         this.currentLevel = level;
         this.levelselect.visible = false;
-
         this.currentSpawnItem = 0;
         this.setSpawnTimer();
-
         this.scoreText.setText("SCORE: "+this.score);
-
-        this.gameStarted = true;
-        this.gameOver = false;
     },
     reset: function() {
         this.gameStarted = false;
-        this.gameOver = false;
+        this.gameStopped = false;
+        this.gameWon = false;
         this.score = 0;
         this.scoreText.setText("HOWDY, SELECT LEVEL:");
         this.floor.reset(0, this.world.height - this.floor.body.height);
@@ -266,16 +276,16 @@ var state = {
 
         var enemy = this.enemies.create(
             this.game.width,
-            this.floor.body.top - this.player.body.height,
+            this.floor.body.top - 96,
             'enemy.kid'
         );
         this.game.physics.enable(enemy);
         enemy.body.velocity.x = conf.speed;
         enemy.body.gravity.y = conf.gravity;
-        enemy.body.setSize(24, 48, 12, 0);
+        enemy.body.setSize(36, 50, 30, 30);
 
-        enemy.animations.add('run', [9, 8, 7, 6, 5, 4, 3, 2], 12, true);
-        enemy.animations.add('broken', [0], 1, false);
+        enemy.animations.add('run', [0, 1], 8, true);
+        enemy.animations.add('broken', [2], 1, false);
 
         enemy.animations.play('run');
     },
@@ -415,23 +425,28 @@ var state = {
         }
     },
     setGameOver: function(player, enemy) {
+        this.gameWon = false;
         this.endGame();
+
+        if(this.player.body.velocity.y < 0) this.player.body.velocity.y = 0;
 
         this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
         this.player.animations.play('broken');
     },
     setWin: function(player, finishLine) {
+        this.gameWon = true;
         this.endGame();
         this.showHint(finishLine, 'YOU ARE A WINNER!');
         this.player.animations.play('win');
     },
     endGame: function() {
         this.timeOver = this.game.time.now;
-        this.gameOver = true;
+        this.gameStopped = true;
         this.spawnTimer.stop();
         this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
         this.levelselect.visible = true;
 
+        this.player.body.velocity.x = 0;
         this.enemies.forEachAlive(function(enemy) {
             enemy.body.velocity.x = 0;
             enemy.animations.play('broken');
@@ -455,6 +470,10 @@ var game = new Phaser.Game(
     680,
     320,
     Phaser.CANVAS,
-    document.querySelector('#screen'),
-    state
+    document.querySelector('#screen')
 );
+
+game.state.add('preload', preloadState);
+game.state.add('game', gameState);
+game.state.add('splash', splashState);
+game.state.start('preload');

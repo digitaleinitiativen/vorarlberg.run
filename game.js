@@ -266,7 +266,7 @@ var state = {
         obstacle.body.velocity.x = conf.speed;
         obstacle.body.immovable = true;
     },
-    spawnPlatform: function(conf) {
+    spawnPlatform: function(item) {
         if(!item.speed) item.speed = -BASE_SPEED;
 
         var platform = this.platforms.create(

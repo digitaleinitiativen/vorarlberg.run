@@ -43,6 +43,7 @@ var state = {
     create: function() {
         this.levels = [];
         this.levels.push(level_dornbirn);
+        this.levels.push(level_feldkirch);
         this.levels.push(level_dev);
 
         this.currentLevel = null;

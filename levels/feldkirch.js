@@ -2,6 +2,13 @@ var level_feldkirch = {
 	title: 'Feldkirch',
 	spawns: [
 		{
+			type: 'finish',
+			time: 1000,
+			conf: {
+				image: 'finish-feldkirch'
+			}
+		},
+		{
 			type: 'enemy',
 			time: 500,
 			conf: {
@@ -204,7 +211,7 @@ var level_feldkirch = {
 			type: 'finish',
 			time: 1000,
 			conf: {
-				
+				image: 'finish-feldkirch'
 			}
 		},
 

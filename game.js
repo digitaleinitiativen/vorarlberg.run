@@ -41,7 +41,8 @@ var preloadState = {
         this.load.image("timefreeze", BASE_PATH + "assets/clock.png?" + ASSET_VERSION, 24, 24);
         this.load.image("feather", BASE_PATH + "assets/jetpack.png?" + ASSET_VERSION, 24, 24);
         this.load.image("extraLife", BASE_PATH + "assets/medikit.png?" + ASSET_VERSION, 24, 24);
-        this.load.image("finish", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
+        this.load.image("finish-feldkirch", BASE_PATH + "assets/fin.png?" + ASSET_VERSION, 179, 160);
+        this.load.image("finish-dornbirn", BASE_PATH + "assets/fin0.png?" + ASSET_VERSION, 179, 160);
         this.load.image("obstacle", BASE_PATH + "assets/obstacle_pear.png?" + ASSET_VERSION, 66, 100);
         this.load.image('splash', BASE_PATH + 'assets/startscreen.png?' + ASSET_VERSION, 680, 320);
     },
@@ -64,6 +65,7 @@ var gameState = {
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_feldkirch);
+        this.levels.push(level_bregenz);
         this.levels.push(level_dev);
 
         this.currentLevel = null;
@@ -79,12 +81,12 @@ var gameState = {
         this.game.physics.enable(this.floor);
         this.floor.body.immovable = true;
 
+        this.finishLines = this.add.group();
         this.platforms = this.add.group();
         this.enemies = this.add.group();
+        this.obstacles = this.add.group();
         this.powerUps = this.add.group();
         this.powerUpNotifications = this.add.group();
-        this.finishLines = this.add.group();
-        this.obstacles = this.add.group();
 
         this.jetpack = this.add.sprite(0, 0, "jetpack-char");
         this.jetpack.animations.add("fly", [1, 2], 6, true);
@@ -306,10 +308,12 @@ var gameState = {
         obstacle.body.velocity.x = conf.speed;
         obstacle.body.immovable = true;
     },
-    spawnPlatform: function() {
+    spawnPlatform: function(conf) {
+        if(!conf) conf = {};
+        if(!conf.height) conf.height = 60;
         var platform = this.platforms.create(
             this.game.width,
-            this.floor.body.top - 60,
+            this.floor.body.top - conf.height,
             'platform'
         );
         this.game.physics.enable(platform);
@@ -317,11 +321,13 @@ var gameState = {
         platform.body.setSize(72, 1, 0, 0);
         platform.body.immovable = true;
     },
-    spawnFinish: function() {
+    spawnFinish: function(conf) {
+        if(!conf) conf = {};
+        if(!conf.image) conf.image = 'finish-feldkirch';
         var finishLine = this.add.sprite(
             this.game.width,
             this.floor.body.top - 160,
-            'finish',
+            conf.image,
             0,
             this.finishLines
         );

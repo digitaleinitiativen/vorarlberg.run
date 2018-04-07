@@ -5,7 +5,7 @@ var SPAWN_RATE = 3000;
 var SPAWN_REDUX = 50;
 var SPAWN_RAND = 400;
 var ASSET_VERSION = 1; //(new Date()).getTime();
-var BASE_PATH = 'game/';
+var BASE_PATH = '';
 var YAY_WORDS = [
     'YAY, A GAME BOY',
     'YAMM',
@@ -38,6 +38,18 @@ var state = {
     },
     create: function() {
 
+        this.levels = [];
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+        this.levels.push(level_dornbirn);
+
+        this.currentLevel = null;
+
+
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.background0 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.0');
@@ -64,40 +76,39 @@ var state = {
         this.player.body.gravity.y = GRAVITY;
         this.player.body.setSize(24, 36, 12, 0);
 
-        this.teaser = this.add.sprite(560, 20, 'teaser');
-
         this.hints = this.add.group();
 
+        this.levelselect = this.add.group();
+
+        var levelsInRow = 4;
+        for(var i = 0; i < this.levels.length; i++) {
+            var level = this.add.text(
+                10 + Math.floor(i/levelsInRow) * 200,
+                50 + 35 * (i % levelsInRow),
+                this.levels[i].title.toUpperCase(),
+                {
+                    fill: '#ffdd00',
+                    align: 'center',
+                    fontSize: 20
+                },
+                this.levelselect
+            );
+            level.inputEnabled = true;
+            level.events.onInputDown.add(function() {
+                this.start(this.levels[i]);
+            }, this);
+        }
+
         this.scoreText = this.add.text(
-            this.world.width / 2,
-            this.world.height / 3,
+            10,
+            10,
             "",
             {
                 fill: '#ffdd00',
-                align: 'center'
+                align: 'left'
             }
         );
-        this.scoreText.anchor.setTo(0.5, 0.5);
         this.scoreText.fontSize = 20;
-
-        this.shareText = this.add.text(
-            this.world.width / 2,
-            this.world.height - this.world.height / 3,
-            "SHARE ON TWITTER",
-            {
-                fill: '#ffdd00',
-                align: 'center'
-            }
-        );
-        this.shareText.anchor.setTo(0.5, 0.5);
-        this.shareText.fontSize = 10;
-        this.shareText.inputEnabled = true;
-        this.shareText.events.onInputDown.add(function() {
-            var url = 'https://twitter.com/home?status=YAY,%20I%20scored%20' + this.score + '%20Points%20on%20the%20%40digitalInit%20%23GameJam17%20Game.%20%0Ahttp%3A//gamejam.diin.io';
-            window.open(url)
-        }, this);
-
-        this.shareText.visible = false;
 
 
         this.score = 0;
@@ -136,10 +147,7 @@ var state = {
         ) {
             if(this.upFree) {
                 if(!this.gameStarted) {
-                    this.start();
                 } else if(this.gameOver) {
-                    if(this.time.now > this.timeOver + 400)
-                        this.reset();
                 } else {
                     if(this.player.body.touching.down)
                         this.player.body.velocity.y -= JUMP;
@@ -168,23 +176,28 @@ var state = {
         } else this.player.animations.play('broken');
 
     },
-    start: function() {
+    start: function(level) {
+        this.currentLevel = level;
+
+        this.reset();
+
         this.spawnTimer = this.game.time.create(this);
         this.spawnTimer.add(this.spawnRate, this.spawnEnemy, this);
         this.spawnTimer.start();
         this.spawnRate = SPAWN_RATE;
 
         this.scoreText.setText("SCORE: "+this.score);
-        this.teaser.visible = false;
+
+        this.levelselect.visible = false;
 
         this.gameStarted = true;
+        this.gameOver = false;
     },
     reset: function() {
         this.gameStarted = false;
         this.gameOver = false;
         this.score = 0;
-        this.shareText.visible = false;
-        this.scoreText.setText("TOUCH TO\nSTART GAME");
+        this.scoreText.setText("HOWDY, SELECT LEVEL:");
         this.floor.reset(0, this.world.height - this.floor.body.height);
         this.player.reset(this.world.width / 4, this.floor.body.y - this.player.body.height);
         this.enemies.removeAll();
@@ -257,7 +270,6 @@ var state = {
 
     },
     setGameOver: function(player, enemy) {
-        this.teaser.visible = true;
         this.timeOver = this.game.time.now;
         this.gameOver = true;
 
@@ -268,10 +280,9 @@ var state = {
         this.showHint(enemy, 'CARAMBOOOOOOLAGEEEE');
 
         this.spawnTimer.stop();
-        this.scoreText.setText("FINAL SCORE: " + this.score +"\nTOUCH TO TRY AGAIN");
-        this.shareText.visible = true;
+        this.scoreText.setText("FINAL SCORE: " + this.score +". SELECT LEVEL:");
+        this.levelselect.visible = true;
         this.player.animations.play('broken');
-        enemy.animations.play('broken');
     }
 };
 

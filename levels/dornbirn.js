@@ -5,6 +5,13 @@ var level_dornbirn = {
 			type: 'powerup',
 			time: 100,
 			conf: {
+				powerUpType: "feather"
+			}
+		},
+		{
+			type: 'powerup',
+			time: 100,
+			conf: {
 				powerUpType: "timefreeze"
 			}
 		},

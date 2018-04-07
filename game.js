@@ -30,7 +30,7 @@ var state = {
         this.load.image("background.1", BASE_PATH + "assets/background-1.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("background.2", BASE_PATH + "assets/background-2.png?" + ASSET_VERSION, 1600, 200);
         this.load.image("background.3", BASE_PATH + "assets/background-3.png?" + ASSET_VERSION, 1600, 200);
-        this.load.image("floor", BASE_PATH + "assets/floor.png?" + ASSET_VERSION, 800, 8);
+        this.load.image("ground", BASE_PATH + "assets/tile-ground.png?" + ASSET_VERSION, 24, 24);
         this.load.image("present", BASE_PATH + "assets/present.png?" + ASSET_VERSION, 24, 24);
         this.load.image("teaser", BASE_PATH + "assets/teaser.png?" + ASSET_VERSION, 222, 105);
         this.load.image("platform", BASE_PATH + "assets/platform.png?" + ASSET_VERSION, 72, 6);
@@ -54,7 +54,7 @@ var state = {
         this.background2 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.2');
         this.background3 = this.add.tileSprite(0, 0, this.world.width, this.world.height, 'background.3');
 
-        this.floor = this.add.sprite(0, this.world.height, 'floor');
+        this.floor = this.add.tileSprite(0, this.world.height - 24, this.world.width, 24, 'ground');
         this.game.physics.enable(this.floor);
         this.floor.body.immovable = true;
 
@@ -177,6 +177,7 @@ var state = {
             this.background1.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 3;
             this.background2.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.5;
             this.background3.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED / 1.2;
+            this.floor.tilePosition.x -= this.time.physicsElapsed * BASE_SPEED;
             this.game.physics.arcade.overlap(this.player, this.enemies, this.setGameOver, null, this);
             this.game.physics.arcade.overlap(this.enemies, this.presents, this.catchPresent, null, this);
             this.game.physics.arcade.overlap(this.player, this.powerUps, this.usePowerUp, null, this);

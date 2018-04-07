@@ -65,6 +65,7 @@ var gameState = {
         this.levels = [];
         this.levels.push(level_dornbirn);
         this.levels.push(level_feldkirch);
+        this.levels.push(level_bludenz);
         this.levels.push(level_bregenz);
         this.levels.push(level_uebersaxen);
 
@@ -128,6 +129,12 @@ var gameState = {
             level.events.onInputDown.add(function(level) {
                 this.start(level.data);
             }, this);
+            level.events.onInputOver.add(function(level) {
+                level.fill = "#ffa500";
+            });
+            level.events.onInputOut.add(function(level) {
+                level.fill = "#000";
+            });
         }
 
         this.scoreText = this.add.text(
@@ -277,7 +284,7 @@ var gameState = {
     spawnEnemy: function(conf) {
         if(!conf.speed) conf.speed = -ENEMY_SPEED;
         if(!conf.gravity) conf.gravity = GRAVITY;
-        if(!conf.image) conf.image = 'enemy-yellow';
+        if(!conf.image) conf.image = conf.jumps ? "enemy-red" : 'enemy-yellow';
 
         var enemy = this.enemies.create(
             this.game.width,
@@ -288,6 +295,14 @@ var gameState = {
         enemy.body.velocity.x = conf.speed;
         enemy.body.gravity.y = conf.gravity;
         enemy.body.setSize(36, 50, 30, 30);
+
+        if (conf.jumps) {
+            var jumpTimer = this.game.time.create(this);
+            jumpTimer.add(2200 / (conf.speed / -ENEMY_SPEED), function() {
+                enemy.body.velocity.y -= JUMP;
+            });
+            jumpTimer.start();
+        }
 
         enemy.animations.add('run', [0, 1], 8, true);
         enemy.animations.add('broken', [2], 1, false);

@@ -104,7 +104,7 @@ var level_feldkirch = {
 		},
 		{
 			type: 'obstacle',
-			time: 500
+			time: 1500
 		},
 		{
 			type: 'enemy',
@@ -122,11 +122,11 @@ var level_feldkirch = {
 		},
 		{
 			type: "platform",
-			time: 1000
+			time: 500
 		},
 		{
 			type: 'powerup',
-			time: 1500,
+			time: 2000,
 			conf: {
 				powerUpType: "extraLife"
 			}

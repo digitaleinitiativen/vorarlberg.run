@@ -1,4 +1,4 @@
-var BASE_SPEED = 100;
+var BASE_SPEED = 110;
 var ENEMY_SPEED = BASE_SPEED * 1.8;
 var GRAVITY = 1200;
 var JUMP = 580;

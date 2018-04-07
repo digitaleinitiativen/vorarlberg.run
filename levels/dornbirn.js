@@ -10,7 +10,7 @@ var level_dornbirn = {
 		},
 		{
 			type: "platform",
-			time: 400
+			time: 500
 		},
 		{
 			type: 'powerup',
@@ -21,7 +21,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 2000,
+			time: 2500,
 			conf: {
 
 			}
@@ -35,7 +35,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 1500,
+			time: 2500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.2
 			}
@@ -49,7 +49,7 @@ var level_dornbirn = {
 		},
 		{
 			type: "platform",
-			time: 200
+			time: 500
 		},
 		{
 			type: 'enemy',
@@ -60,7 +60,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'powerup',
-			time: 500,
+			time: 700,
 			conf: {
 				powerUpType: "feather"
 			}
@@ -74,28 +74,28 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 2000,
 			conf: {
 				speed: -ENEMY_SPEED * 1.2
 			}
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.2
 			}
 		},
 		{
 			type: 'powerup',
-			time: 100,
+			time: 600,
 			conf: {
 				powerUpType: "timefreeze"
 			}
 		},
 		{
 			type: 'obstacle',
-			time: 500
+			time: 600
 		},
 		{
 			type: 'enemy',
@@ -113,7 +113,7 @@ var level_dornbirn = {
 		},
 		{
 			type: "platform",
-			time: 1000
+			time: 1200
 		},
 		{
 			type: 'powerup',
@@ -124,7 +124,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 1500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.5
 			}
@@ -145,11 +145,11 @@ var level_dornbirn = {
 		},
 		{
 			type: "platform",
-			time: 1000
+			time: 1200
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 1500,
 			conf: {
 				speed: -ENEMY_SPEED * 1.5
 			}
@@ -163,7 +163,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'obstacle',
-			time: 500,
+			time: 600,
 		},
 		{
 			type: 'enemy',
@@ -185,7 +185,7 @@ var level_dornbirn = {
 		},
 		{
 			type: 'enemy',
-			time: 1000,
+			time: 1200,
 			conf: {
 
 			}

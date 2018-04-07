@@ -40,12 +40,6 @@ var state = {
 
         this.levels = [];
         this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
-        this.levels.push(level_dornbirn);
 
         this.currentLevel = null;
 
